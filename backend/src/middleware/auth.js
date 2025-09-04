@@ -1,0 +1,116 @@
+import jwt from "jsonwebtoken";
+import { Client, Account } from "node-appwrite";
+
+// Initialize Appwrite client
+const client = new Client()
+  .setEndpoint(process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1")
+  .setProject(process.env.APPWRITE_PROJECT_ID)
+  .setKey(process.env.APPWRITE_API_KEY);
+
+const account = new Account(client);
+
+// Middleware to verify JWT token
+export const verifyToken = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+
+    if (!token) {
+      return res.status(401).json({
+        error: "Access denied",
+        message: "No token provided",
+      });
+    }
+
+    // Verify JWT token
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "fallback-secret"
+    );
+    req.user = decoded;
+
+    // Optionally verify with Appwrite session
+    try {
+      const appwriteClient = new Client()
+        .setEndpoint(
+          process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1"
+        )
+        .setProject(process.env.APPWRITE_PROJECT_ID)
+        .setSession(decoded.sessionId);
+
+      const appwriteAccount = new Account(appwriteClient);
+      await appwriteAccount.get();
+    } catch (appwriteError) {
+      console.warn(
+        "Appwrite session verification failed:",
+        appwriteError.message
+      );
+      // Continue with JWT verification only
+    }
+
+    next();
+  } catch (error) {
+    console.error("Token verification error:", error);
+
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        error: "Invalid token",
+        message: "Token is malformed or invalid",
+      });
+    }
+
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        error: "Token expired",
+        message: "Please login again",
+      });
+    }
+
+    res.status(401).json({
+      error: "Authentication failed",
+      message: "Unable to verify token",
+    });
+  }
+};
+
+// Middleware to check if user owns the resource
+export const checkResourceOwnership = (resourceParam = "userId") => {
+  return (req, res, next) => {
+    const resourceUserId = req.params[resourceParam];
+    const tokenUserId = req.user.userId;
+
+    if (resourceUserId !== tokenUserId) {
+      return res.status(403).json({
+        error: "Access forbidden",
+        message: "You can only access your own resources",
+      });
+    }
+
+    next();
+  };
+};
+
+// Middleware for optional authentication (for public endpoints that benefit from user context)
+export const optionalAuth = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+
+    if (token) {
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET || "fallback-secret"
+      );
+      req.user = decoded;
+    }
+
+    next();
+  } catch (error) {
+    // Continue without authentication for optional auth
+    next();
+  }
+};
+
+export default {
+  verifyToken,
+  checkResourceOwnership,
+  optionalAuth,
+};
