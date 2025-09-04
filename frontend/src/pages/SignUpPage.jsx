@@ -16,6 +16,64 @@ import { useAuth } from "../contexts/AuthContext";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 const SignUpPage = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState("");
+
+  const { register, error, clearError } = useAuth();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear errors when user starts typing
+    if (error) clearError();
+    if (validationError) setValidationError("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setValidationError("Passwords do not match");
+      return;
+    }
+
+    // Validate password strength
+    if (formData.password.length < 6) {
+      setValidationError("Password must be at least 6 characters long");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Registration failed:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSubmitting) {
+    return <LoadingSpinner message="Creating your account..." />;
+  }
+
   return (
     <div className="min-h-screen bg-primary-100 flex items-center justify-center p-6 relative">
       {/* Grid Background */}
@@ -58,7 +116,15 @@ const SignUpPage = () => {
           </CardHeader>
 
           <CardContent>
-            <form className="space-y-6">
+            {(error || validationError) && (
+              <div className="mb-4 p-4 bg-red-100 border-4 border-red-500 rounded-lg">
+                <p className="text-red-700 font-bold">
+                  {error || validationError}
+                </p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label
                   htmlFor="fullName"
@@ -68,8 +134,11 @@ const SignUpPage = () => {
                 </Label>
                 <Input
                   id="fullName"
+                  name="name"
                   type="text"
                   placeholder="John Doe"
+                  value={formData.name}
+                  onChange={handleChange}
                   required
                   className="h-12 text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
                 />
@@ -84,8 +153,11 @@ const SignUpPage = () => {
                 </Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
                   className="h-12 text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
                 />
@@ -100,8 +172,11 @@ const SignUpPage = () => {
                 </Label>
                 <Input
                   id="password"
+                  name="password"
                   type="password"
                   placeholder="Create a strong password"
+                  value={formData.password}
+                  onChange={handleChange}
                   required
                   className="h-12 text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
                 />
@@ -116,24 +191,29 @@ const SignUpPage = () => {
                 </Label>
                 <Input
                   id="confirmPassword"
+                  name="confirmPassword"
                   type="password"
                   placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                   required
                   className="h-12 text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
                 />
               </div>
+
+              {/* Submit button inside form */}
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isSubmitting}
+                className="w-full bg-primary-500 text-neutral-50 font-bold text-lg border-4 border-neutral-950 hover:bg-primary-600 disabled:opacity-50"
+              >
+                {isSubmitting ? "Creating Account..." : "Create Account"}
+              </Button>
             </form>
           </CardContent>
 
           <CardFooter className="flex-col space-y-4">
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full bg-primary-500 text-neutral-50 font-bold text-lg border-4 border-neutral-950"
-            >
-              Create Account
-            </Button>
-
             <Button
               type="button"
               variant="neutral"
@@ -146,12 +226,12 @@ const SignUpPage = () => {
             <div className="text-center pt-4">
               <p className="text-neutral-700 font-bold">
                 Already have an account?{" "}
-                <a
-                  href="#"
+                <Link
+                  to="/login"
                   className="text-primary-600 font-black hover:text-primary-500 hover:-translate-y-1 transition-all inline-block"
                 >
                   Login here
-                </a>
+                </Link>
               </p>
             </div>
           </CardFooter>

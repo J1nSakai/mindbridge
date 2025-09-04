@@ -1,0 +1,9 @@
+declare module 'express';
+declare module 'bcryptjs';
+declare module 'jsonwebtoken';
+declare module 'morgan';
+declare module 'cors';
+declare module 'helmet';
+declare module 'express-rate-limit';
+declare module 'express-validator';
+declare module 'node-appwrite';

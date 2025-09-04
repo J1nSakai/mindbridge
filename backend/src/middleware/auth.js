@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Client, Account } from "node-appwrite";
+import { Client, Users } from "node-appwrite";
 
 // Initialize Appwrite client
 const client = new Client()
@@ -7,7 +7,7 @@ const client = new Client()
   .setProject(process.env.APPWRITE_PROJECT_ID)
   .setKey(process.env.APPWRITE_API_KEY);
 
-const account = new Account(client);
+const users = new Users(client);
 
 // Middleware to verify JWT token
 export const verifyToken = async (req, res, next) => {
@@ -28,22 +28,11 @@ export const verifyToken = async (req, res, next) => {
     );
     req.user = decoded;
 
-    // Optionally verify with Appwrite session
+    // Optionally verify user exists in Appwrite
     try {
-      const appwriteClient = new Client()
-        .setEndpoint(
-          process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1"
-        )
-        .setProject(process.env.APPWRITE_PROJECT_ID)
-        .setSession(decoded.sessionId);
-
-      const appwriteAccount = new Account(appwriteClient);
-      await appwriteAccount.get();
+      await users.get(decoded.userId);
     } catch (appwriteError) {
-      console.warn(
-        "Appwrite session verification failed:",
-        appwriteError.message
-      );
+      console.warn("Appwrite user verification failed:", appwriteError.message);
       // Continue with JWT verification only
     }
 

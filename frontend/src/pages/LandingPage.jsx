@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import HighlightedText from "@/components/ui/HighlightedText";
 import FeatureCard from "@/components/ui/FeatureCard";
@@ -24,6 +25,7 @@ import {
 
 const LandingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
@@ -68,10 +70,18 @@ const LandingPage = () => {
             </div>
 
             <div className="flex gap-4">
-              <Button className="bg-neutral-950 text-neutral-50 font-bold py-6 px-6">
+              <Button
+                onClick={() => navigate("/login")}
+                className={
+                  "bg-neutral-950 text-neutral-50 font-bold py-6 px-6 hover:bg-neutral-800 transition"
+                }
+              >
                 Login
               </Button>
-              <Button className="bg-primary-500 text-neutral-50 font-bold py-6 px-6">
+              <Button
+                onClick={() => navigate("/signup")}
+                className="bg-primary-500 text-neutral-50 font-bold py-6 px-6 hover:bg-primary-600 transition"
+              >
                 Sign Up
               </Button>
             </div>
@@ -95,7 +105,10 @@ const LandingPage = () => {
                 you find challenging.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-neutral-950 text-neutral-50 font-bold py-8 px-8 text-lg border-neutral-950 hover:scale-105 hover:-translate-y-1 hover:rotate-1 transition-all duration-300 animate-bounce-subtle">
+                <Button
+                  onClick={() => navigate("/signup")}
+                  className="bg-neutral-950 text-neutral-50 font-bold py-8 px-8 text-lg border-neutral-950 hover:scale-105 hover:-translate-y-1 hover:rotate-1 transition-all duration-300 animate-bounce-subtle"
+                >
                   Try For Free
                 </Button>
                 <Button className="bg-neutral-50 font-bold py-8 px-8 text-lg border-neutral-950 hover:scale-105 hover:-translate-y-1 hover:-rotate-1 transition-all duration-300">

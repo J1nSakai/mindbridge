@@ -1,9 +1,9 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
-import dotenv from "dotenv";
 
 // Import routes
 import authRoutes from "./routes/auth.js";
@@ -11,8 +11,8 @@ import aiRoutes from "./routes/ai.js";
 import gameRoutes from "./routes/game.js";
 import userRoutes from "./routes/user.js";
 
-// Load environment variables
-dotenv.config();
+// // Load environment variables
+// dotenv.config();
 
 const app = express();
 

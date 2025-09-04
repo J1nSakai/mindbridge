@@ -29,8 +29,15 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "node-appwrite": "^13.0.0",
+    "node-appwrite": "^18.0.0",
     "nodemon": "^3.1.10",
     "openai": "^4.67.3"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10"
   }
 }

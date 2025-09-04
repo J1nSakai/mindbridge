@@ -1,6 +1,6 @@
 import express from "express";
 import { body, validationResult } from "express-validator";
-import { Client, Databases, ID, Query } from "node-appwrite";
+import { Client, TablesDB, ID, Query } from "node-appwrite";
 import { verifyToken, checkResourceOwnership } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const client = new Client()
   .setProject(process.env.APPWRITE_PROJECT_ID)
   .setKey(process.env.APPWRITE_API_KEY);
 
-const databases = new Databases(client);
+const tablesDB = new TablesDB(client);
 const DATABASE_ID = process.env.APPWRITE_DATABASE_ID;
 const CHARACTERS_COLLECTION_ID = process.env.APPWRITE_CHARACTERS_COLLECTION_ID;
 const BATTLES_COLLECTION_ID = process.env.APPWRITE_BATTLES_COLLECTION_ID;
@@ -52,7 +52,7 @@ router.get(
     try {
       const { userId } = req.params;
 
-      const character = await databases.getDocument(
+      const character = await tablesDB.getDocument(
         DATABASE_ID,
         CHARACTERS_COLLECTION_ID,
         userId
@@ -112,7 +112,7 @@ router.post("/battle/start", verifyToken, async (req, res) => {
     const { userId, topic, difficulty = "intermediate" } = req.body;
 
     // Get user's character
-    const character = await databases.getDocument(
+    const character = await tablesDB.getDocument(
       DATABASE_ID,
       CHARACTERS_COLLECTION_ID,
       userId
@@ -122,7 +122,7 @@ router.post("/battle/start", verifyToken, async (req, res) => {
     const enemy = generateEnemy(topic, difficulty);
 
     // Create battle record
-    const battle = await databases.createDocument(
+    const battle = await tablesDB.createDocument(
       DATABASE_ID,
       BATTLES_COLLECTION_ID,
       ID.unique(),
@@ -182,7 +182,7 @@ router.post(
         req.body;
 
       // Get battle data
-      const battle = await databases.getDocument(
+      const battle = await tablesDB.getDocument(
         DATABASE_ID,
         BATTLES_COLLECTION_ID,
         battleId
@@ -204,7 +204,7 @@ router.post(
       let experienceGained = 0;
 
       // Get user's character for stats
-      const character = await databases.getDocument(
+      const character = await tablesDB.getDocument(
         DATABASE_ID,
         CHARACTERS_COLLECTION_ID,
         battle.userId
@@ -222,7 +222,7 @@ router.post(
       }
 
       // Update battle record
-      const updatedBattle = await databases.updateDocument(
+      const updatedBattle = await tablesDB.updateDocument(
         DATABASE_ID,
         BATTLES_COLLECTION_ID,
         battleId,
@@ -288,7 +288,7 @@ router.get("/leaderboard", async (req, res) => {
         ? "totalExperience"
         : "battlesWon";
 
-    const characters = await databases.listDocuments(
+    const characters = await tablesDB.listDocuments(
       DATABASE_ID,
       CHARACTERS_COLLECTION_ID,
       [Query.orderDesc(orderBy), Query.limit(parseInt(limit))]
@@ -323,7 +323,7 @@ router.get("/leaderboard", async (req, res) => {
 
 // Helper functions
 async function createNewCharacter(userId) {
-  const character = await databases.createDocument(
+  const character = await tablesDB.createDocument(
     DATABASE_ID,
     CHARACTERS_COLLECTION_ID,
     userId,
@@ -397,7 +397,7 @@ function calculateDamage(attack, defense) {
 
 async function endBattle(battleId, result, character, experienceGained) {
   // Update battle status
-  await databases.updateDocument(DATABASE_ID, BATTLES_COLLECTION_ID, battleId, {
+  await tablesDB.updateDocument(DATABASE_ID, BATTLES_COLLECTION_ID, battleId, {
     status: result,
     endedAt: new Date().toISOString(),
   });
@@ -432,7 +432,7 @@ async function endBattle(battleId, result, character, experienceGained) {
       (newLevel - 1) * GAME_CONFIG.STAT_GROWTH.defense;
   }
 
-  await databases.updateDocument(
+  await tablesDB.updateDocument(
     DATABASE_ID,
     CHARACTERS_COLLECTION_ID,
     character.$id,

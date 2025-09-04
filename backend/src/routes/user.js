@@ -1,6 +1,6 @@
 import express from "express";
 import { body, validationResult } from "express-validator";
-import { Client, Databases, Query, ID } from "node-appwrite";
+import { Client, TablesDB, Query, ID } from "node-appwrite";
 import { verifyToken, checkResourceOwnership } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const client = new Client()
   .setProject(process.env.APPWRITE_PROJECT_ID)
   .setKey(process.env.APPWRITE_API_KEY);
 
-const databases = new Databases(client);
+const tablesDB = new TablesDB(client);
 const DATABASE_ID = process.env.APPWRITE_DATABASE_ID;
 const USERS_COLLECTION_ID = process.env.APPWRITE_USERS_COLLECTION_ID;
 const PROGRESS_COLLECTION_ID = process.env.APPWRITE_PROGRESS_COLLECTION_ID;
@@ -80,7 +80,7 @@ router.get(
       }
 
       // Get study sessions
-      const sessions = await databases.listDocuments(
+      const sessions = await tablesDB.listDocuments(
         DATABASE_ID,
         STUDY_SESSIONS_COLLECTION_ID,
         [
@@ -138,7 +138,7 @@ router.post(
         correctAnswers,
       } = req.body;
 
-      const session = await databases.createDocument(
+      const session = await tablesDB.createDocument(
         DATABASE_ID,
         STUDY_SESSIONS_COLLECTION_ID,
         ID.unique(),
@@ -193,7 +193,7 @@ router.get(
     try {
       const { userId } = req.params;
 
-      const profile = await databases.getDocument(
+      const profile = await tablesDB.getDocument(
         DATABASE_ID,
         USERS_COLLECTION_ID,
         userId
@@ -261,7 +261,7 @@ router.put(
       if (preferences) updateData.preferences = JSON.stringify(preferences);
       if (studyGoals) updateData.studyGoals = JSON.stringify(studyGoals);
 
-      const updatedProfile = await databases.updateDocument(
+      const updatedProfile = await tablesDB.updateDocument(
         DATABASE_ID,
         USERS_COLLECTION_ID,
         userId,
@@ -300,7 +300,7 @@ router.get("/achievements/:userId", async (req, res) => {
     const { userId } = req.params;
 
     // Get user's study sessions to calculate achievements
-    const sessions = await databases.listDocuments(
+    const sessions = await tablesDB.listDocuments(
       DATABASE_ID,
       STUDY_SESSIONS_COLLECTION_ID,
       [Query.equal("userId", userId), Query.orderDesc("createdAt")]
@@ -334,7 +334,7 @@ router.get("/dashboard/:userId", async (req, res) => {
     const { userId } = req.params;
 
     // Get recent sessions
-    const recentSessions = await databases.listDocuments(
+    const recentSessions = await tablesDB.listDocuments(
       DATABASE_ID,
       STUDY_SESSIONS_COLLECTION_ID,
       [
@@ -348,7 +348,7 @@ router.get("/dashboard/:userId", async (req, res) => {
     const weekStart = new Date();
     weekStart.setDate(weekStart.getDate() - 7);
 
-    const weeklyProgress = await databases.listDocuments(
+    const weeklyProgress = await tablesDB.listDocuments(
       DATABASE_ID,
       STUDY_SESSIONS_COLLECTION_ID,
       [
