@@ -8,7 +8,7 @@ import rateLimit from "express-rate-limit";
 // Import routes
 import authRoutes from "./routes/auth.js";
 import aiRoutes from "./routes/ai.js";
-import gameRoutes from "./routes/game.js";
+
 import userRoutes from "./routes/user.js";
 
 // // Load environment variables
@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 // API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/ai", aiRoutes);
-app.use("/api/game", gameRoutes);
+
 app.use("/api/user", userRoutes);
 
 // 404 handler

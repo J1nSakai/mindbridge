@@ -1,3 +1,4 @@
+import { body } from "express-validator";
 import jwt from "jsonwebtoken";
 import { Client, Users } from "node-appwrite";
 
@@ -97,6 +98,23 @@ export const optionalAuth = async (req, res, next) => {
     next();
   }
 };
+
+// Validation middleware
+export const validateSignup = [
+  body("email").isEmail().normalizeEmail(),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters"),
+  body("name")
+    .trim()
+    .isLength({ min: 2 })
+    .withMessage("Name must be at least 2 characters"),
+];
+
+export const validateLogin = [
+  body("email").isEmail().normalizeEmail(),
+  body("password").notEmpty().withMessage("Password is required"),
+];
 
 export default {
   verifyToken,

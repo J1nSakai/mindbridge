@@ -75,7 +75,8 @@ async function generateAIResponse(prompt, maxTokens = 800) {
 
     if (AI_PROVIDER === "groq" || AI_PROVIDER === "openai") {
       const completion = await aiClient.chat.completions.create({
-        model: AI_PROVIDER === "groq" ? "llama3-8b-8192" : "gpt-3.5-turbo",
+        model:
+          AI_PROVIDER === "groq" ? "llama-3.3-70b-versatile" : "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
@@ -200,6 +201,8 @@ router.post(
     Format each flashcard as JSON with "front" (question/term) and "back" (answer/definition).
     Make questions clear and answers comprehensive but concise.
     Include a mix of definitions, concepts, and application questions.
+    For any flashcard with a programming language markdown, or any text in markdown,
+    DO NOT wrap the text with backticks. Instead, just produce it as a plain text.
     
     Return only a JSON array of flashcard objects.`;
 
@@ -208,7 +211,10 @@ router.post(
       let flashcards;
       try {
         flashcards = JSON.parse(response);
+        console.log(flashcards);
+        
       } catch (parseError) {
+        
         throw new Error("Invalid JSON response from AI");
       }
 

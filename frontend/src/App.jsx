@@ -6,7 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import DashboardPage from "./pages/DashboardPage";
 import StudyPage from "./pages/StudyPage";
-import GamePage from "./pages/GamePage";
+
 import ProfilePage from "./pages/ProfilePage";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 
@@ -71,14 +71,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/game"
-        element={
-          <ProtectedRoute>
-            <GamePage />
-          </ProtectedRoute>
-        }
-      />
+
       <Route
         path="/profile"
         element={

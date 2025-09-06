@@ -115,22 +115,13 @@ export const aiAPI = {
     apiClient.post("/ai/summary", { topic, difficulty }),
   generateFlashcards: (topic, count = 10, difficulty = "intermediate") =>
     apiClient.post("/ai/flashcards", { topic, count, difficulty }),
-  generateQuiz: (topic, questionCount = 5, difficulty = "intermediate") =>
+  generateQuiz: (topic, questionCount = 10, difficulty = "intermediate") =>
     apiClient.post("/ai/quiz", { topic, questionCount, difficulty }),
   explainConcept: (concept, context = "") =>
     apiClient.post("/ai/explain", { concept, context }),
 };
 
-// Game API
-export const gameAPI = {
-  getCharacter: (userId) => apiClient.get(`/game/character/${userId}`),
-  startBattle: (topic, difficulty = "intermediate") =>
-    apiClient.post("/game/battle/start", { topic, difficulty }),
-  battleAction: (battleId, answer, questionId) =>
-    apiClient.post("/game/battle/action", { battleId, answer, questionId }),
-  getLeaderboard: (timeframe = "week") =>
-    apiClient.get(`/game/leaderboard?timeframe=${timeframe}`),
-};
+
 
 // Export the API client for direct use if needed
 export { apiClient };

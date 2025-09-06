@@ -12,7 +12,7 @@ import {
   BookOpenCheck,
   Bot,
   BrainCircuit,
-  Gamepad2,
+
   GraduationCap,
   Heart,
   Mountain,
@@ -191,16 +191,7 @@ const LandingPage = () => {
               />
             </div>
 
-            <div className="animate-fade-in-up delay-400">
-              <FeatureCard
-                icon={Gamepad2}
-                title="RPG Learning Game"
-                description="Turn learning into an adventure with our 2D RPG game. Answer correctly to deal damage to enemies, but be careful - wrong answers will cost you!"
-                bgColor="bg-primary-500"
-                textColor="text-neutral-50"
-                iconRotation="-rotate-6"
-              />
-            </div>
+
 
             <div className="animate-fade-in-up delay-500">
               <FeatureCard
@@ -226,77 +217,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* RPG Game Showcase */}
-      <section className="py-20 bg-primary-100 overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="lg:w-1/2 animate-fade-in-left">
-              <h2 className="text-4xl font-black mb-6 hover:scale-105 transition-transform duration-300">
-                Learn Through <HighlightedText>Adventure</HighlightedText>
-              </h2>
-              <p className="text-xl mb-8 animate-fade-in-up delay-200">
-                Our unique 2D RPG game turns boring study sessions into exciting
-                adventures. Battle monsters by answering questions correctly,
-                level up your character, and conquer difficult subjects!
-              </p>
 
-              <div className="bg-neutral-50 p-6 rounded-xl border-4 border-neutral-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-8 hover:scale-105 transition-all duration-300 animate-fade-in-up delay-400">
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-3 animate-slide-in-left delay-500 hover:translate-x-2 transition-transform duration-300">
-                    <div className="bg-primary-500 p-1 rounded-md border-2 border-neutral-950 animate-pulse">
-                      <Star className="text-neutral-50" />
-                    </div>
-                    <span className="font-bold">
-                      Answer correctly to attack enemies
-                    </span>
-                  </li>
-                  <li className="flex items-center gap-3 animate-slide-in-left delay-600 hover:translate-x-2 transition-transform duration-300">
-                    <div className="bg-primary-500 p-1 rounded-md border-2 border-neutral-950 animate-pulse">
-                      <Star className="text-neutral-50" />
-                    </div>
-                    <span className="font-bold">
-                      Collect power-ups and special items
-                    </span>
-                  </li>
-                  <li className="flex items-center gap-3 animate-slide-in-left delay-700 hover:translate-x-2 transition-transform duration-300">
-                    <div className="bg-primary-500 p-1 rounded-md border-2 border-neutral-950 animate-pulse">
-                      <Star className="text-neutral-50" />
-                    </div>
-                    <span className="font-bold">
-                      Customize your character as you level up
-                    </span>
-                  </li>
-                  <li className="flex items-center gap-3 animate-slide-in-left delay-800 hover:translate-x-2 transition-transform duration-300">
-                    <div className="bg-primary-500 p-1 rounded-md border-2 border-neutral-950 animate-pulse">
-                      <Star className="text-neutral-50" />
-                    </div>
-                    <span className="font-bold">
-                      Compete with friends on the leaderboard
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="lg:w-1/2 relative animate-fade-in-right">
-              <div className="bg-primary-300 p-6 rounded-xl border-8 border-neutral-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] -rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-500 animate-float">
-                <img
-                  src="https://placehold.co/600x400/primary-200/primary-800?text=RPG+Game+Screenshot"
-                  alt="RPG Learning Game Screenshot"
-                  className="rounded-lg border-4 border-neutral-950 w-full hover:scale-105 transition-transform duration-300"
-                  keywords="RPG game, educational game, learning game, 2D game"
-                />
-              </div>
-              <div className="absolute -top-6 -left-6 bg-neutral-300 p-4 rounded-lg border-4 border-neutral-950 rotate-12 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce-slow hover:rotate-45 transition-transform duration-300">
-                <Mountain />
-              </div>
-              <div className="absolute -bottom-4 -right-4 bg-primary-600 p-4 rounded-lg border-4 border-neutral-950 -rotate-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-pulse hover:-rotate-12 transition-transform duration-300">
-                <Trophy className="text-neutral-50" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-20 bg-neutral-50">
@@ -323,7 +244,7 @@ const LandingPage = () => {
             <HowItWorksStep
               stepNumber={3}
               title="Learn Your Way"
-              description="Choose how you want to study - read summaries, review flashcards, take quizzes, or play the RPG learning game."
+              description="Choose how you want to study - read summaries, review flashcards, or take quizzes to test your knowledge."
               bgColor="bg-primary-300"
             />
           </div>
@@ -347,11 +268,8 @@ const LandingPage = () => {
               </div>
               <p className="text-lg mb-8 text-neutral-300 leading-relaxed">
                 Transform your learning experience with AI-powered tools. Make
-                studying fun with our{" "}
-                <HighlightedText bgColor="bg-primary-500">
-                  RPG learning game
-                </HighlightedText>{" "}
-                and intelligent study materials.
+                studying effective with our intelligent study materials and
+                personalized learning approach.
               </p>
 
               {/* Social Links */}
