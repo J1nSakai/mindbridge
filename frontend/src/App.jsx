@@ -6,7 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import DashboardPage from "./pages/DashboardPage";
 import StudyPage from "./pages/StudyPage";
-
+import TopicPage from "./pages/TopicPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 
@@ -68,6 +68,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <StudyPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/topic/:topicId"
+        element={
+          <ProtectedRoute>
+            <TopicPage />
           </ProtectedRoute>
         }
       />

@@ -26,7 +26,7 @@ const StudyPage = () => {
   const [difficulty, setDifficulty] = useState("intermediate");
   const [loading, setLoading] = useState(false);
   const [questionCount, setQuestionCount] = useState(5); // New state for question count
-  
+
   // Session data states to store information from each step
   const [summarySessionData, setSummarySessionData] = useState(null);
   const [flashcardsSessionData, setFlashcardsSessionData] = useState(null);
@@ -87,40 +87,57 @@ const StudyPage = () => {
       score: sessionData.score || null,
       questionsAnswered: sessionData.questionsAnswered || null,
       correctAnswers: sessionData.correctAnswers || null,
+      summary: sessionData.summary || null,
+      flashcards: sessionData.flashcards || null,
     };
   };
-  
+
   // This function will record the complete study session after quiz completion
-  const recordCompleteSession = async (summaryData, flashcardsData, quizData) => {
+  const recordCompleteSession = async (
+    summaryData,
+    flashcardsData,
+    quizData
+  ) => {
     try {
-      console.log('📊 Session data:', { summaryData, flashcardsData, quizData });
-      
+      console.log("📊 Session data:", {
+        summaryData,
+        flashcardsData,
+        quizData,
+      });
+
       // Record a single comprehensive study session
       const sessionPayload = {
         userId,
         topic,
         type: "complete", // New session type that includes all steps
-        duration: summaryData.duration + flashcardsData.duration + quizData.duration,
-        score: quizData.score,
+        totalQuestions: questionCount,
         questionsAnswered: quizData.questionsAnswered,
         correctAnswers: quizData.correctAnswers,
+        generatedSummary: summary.summary,
+        flashCards: JSON.stringify(flashcards),
+        quizData: JSON.stringify(quiz.questions),
+        selectedQuizAnswers: JSON.stringify(selectedAnswers),
       };
-      
-      console.log('📤 Sending session payload:', sessionPayload);
-      
+
+      console.log(quiz);
+
+      console.log("📤 Sending session payload:", sessionPayload);
+
       const response = await userAPI.recordStudySession(sessionPayload);
       console.log(`✅ Recorded complete study session for ${topic}:`, response);
     } catch (error) {
       console.error(`❌ Failed to record complete study session:`, error);
-      console.error('Error details:', error.response?.data || error.message);
+      console.error("Error details:", error.response?.data || error.message);
     }
   };
 
   const startQuiz = async () => {
     // Store summary and flashcards session data in state instead of recording immediately
     const summarySessionData = collectSessionData("summary", { duration: 5 });
-    const flashcardsSessionData = collectSessionData("flashcards", { duration: 10 });
-    
+    const flashcardsSessionData = collectSessionData("flashcards", {
+      duration: 10,
+    });
+
     // Save session data to state for later use
     setSummarySessionData(summarySessionData);
     setFlashcardsSessionData(flashcardsSessionData);
@@ -137,6 +154,8 @@ const StudyPage = () => {
   };
 
   const finishQuiz = async () => {
+    console.log(selectedAnswers);
+
     // Calculate quiz results
     const correctAnswers = Object.entries(selectedAnswers).filter(
       ([questionIndex, answer]) =>
@@ -153,7 +172,7 @@ const StudyPage = () => {
       questionsAnswered: quiz.questions.length,
       correctAnswers,
     });
-    
+
     // Now record the complete session with data from all steps
     await recordCompleteSession(
       summarySessionData,

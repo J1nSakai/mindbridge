@@ -107,6 +107,8 @@ export const userAPI = {
     apiClient.put(`/user/profile/${userId}`, profileData),
   getAchievements: (userId) => apiClient.get(`/user/achievements/${userId}`),
   getDashboard: (userId) => apiClient.get(`/user/dashboard/${userId}`),
+  getTopicSessions: (userId, topic) =>
+    apiClient.get(`/user/topic-sessions/${userId}?topic=${encodeURIComponent(topic)}`),
 };
 
 // AI API

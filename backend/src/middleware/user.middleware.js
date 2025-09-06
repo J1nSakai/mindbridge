@@ -6,13 +6,10 @@ export const validateStudySession = [
   body("type")
     .isIn(["summary", "flashcards", "quiz", "complete"])
     .withMessage("Invalid session type"),
-  body("duration")
-    .isInt({ min: 1 })
-    .withMessage("Duration must be a positive integer"),
-  body("score")
+  body("totalQuestions")
     .optional({ nullable: true })
-    .isInt({ min: 0, max: 100 })
-    .withMessage("Score must be between 0 and 100"),
+    .isInt({ min: 0 })
+    .withMessage("Total questions must be a non-negative integer"),
   body("questionsAnswered")
     .optional({ nullable: true })
     .isInt({ min: 0 })
@@ -21,6 +18,18 @@ export const validateStudySession = [
     .optional({ nullable: true })
     .isInt({ min: 0 })
     .withMessage("Correct answers must be a non-negative integer"),
+  body("generatedSummary")
+    .optional({ nullable: true })
+    .isString()
+    .withMessage("Generated summary must be a string"),
+  body("flashCards")
+    .optional({ nullable: true })
+    .isString()
+    .withMessage("Flashcards must be a string"),
+  body("quizData")
+    .optional({ nullable: true })
+    .isString()
+    .withMessage("Quiz data must be a string"),
 ];
 
 export const validateProfileUpdate = [

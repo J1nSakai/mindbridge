@@ -1,7 +1,7 @@
 {
   "name": "mindbridge-backend",
   "version": "1.0.0",
-  "description": "Backend API for MindBridge - AI-powered gamified learning platform",
+  "description": "Backend API for MindBridge - AI-powered learning platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -15,7 +15,7 @@
     "flashcards",
     "quiz"
   ],
-  "author": "MindBridge Team",
+  "author": "Taimoor",
   "license": "MIT",
   "type": "module",
   "dependencies": {

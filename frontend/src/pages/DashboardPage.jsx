@@ -49,7 +49,7 @@ const DashboardPage = () => {
       const topicName = session.topic;
       if (!topicMap[topicName]) {
         topicMap[topicName] = {
-          id: topicName.toLowerCase().replace(/\s+/g, "-"),
+          id: encodeURIComponent(topicName.toLowerCase().replace(/\s+/g, "-")),
           name: topicName,
           sessions: [],
           totalSessions: 0,
@@ -184,9 +184,9 @@ const DashboardPage = () => {
   }, []);
 
   const handleTopicClick = (topicId) => {
-    // Navigate to study page with topic - we'll implement this later
+    // Navigate to topic page with topic ID
     console.log("Topic clicked:", topicId);
-    navigate("/study");
+    navigate(`/topic/${topicId}`);
   };
 
   const handleLearnNewClick = () => {
@@ -375,13 +375,15 @@ const DashboardPage = () => {
                 Learning Topics
               </HighlightedText>
             </h3>
-            <Button
-              onClick={handleLearnNewClick}
-              className="bg-neutral-950 text-neutral-50 font-bold text-lg px-6 py-3 hover:scale-105 hover:-translate-y-1 hover:rotate-1 transition-all duration-300"
-            >
-              <Plus className="mr-2" />
-              Learn Something New
-            </Button>
+            {topics.length > 0 && (
+              <Button
+                onClick={handleLearnNewClick}
+                className="bg-neutral-950 text-neutral-50 font-bold text-lg px-6 py-3 hover:scale-105 hover:-translate-y-1 hover:rotate-1 transition-all duration-300"
+              >
+                <Plus className="mr-2" />
+                Learn Something New
+              </Button>
+            )}
           </div>
 
           {topics.length === 0 ? (
@@ -422,38 +424,41 @@ const DashboardPage = () => {
                 ];
 
                 return (
-                  <Card
+                  <div
                     key={topic.id}
                     onClick={() => handleTopicClick(topic.id)}
-                    className={`${
-                      colors[index % colors.length]
-                    } p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-105 ${
-                      rotations[index % rotations.length]
-                    } hover:rotate-0`}
                   >
-                    <div className="bg-neutral-50 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-4 rotate-3">
-                      <BookOpen className="text-2xl text-neutral-950" />
-                    </div>
-                    <h4 className="text-xl font-black text-neutral-950 mb-3">
-                      {topic.name}
-                    </h4>
-                    <div className="mb-4">
-                      <div className="flex justify-between text-sm font-bold text-neutral-950 mb-2">
+                    <Card
+                      className={`${
+                        colors[index % colors.length]
+                      } p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-105 ${
+                        rotations[index % rotations.length]
+                      } hover:rotate-0`}
+                    >
+                      <div className="bg-neutral-50 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-4 rotate-3">
+                        <BookOpen className="text-2xl text-neutral-950" />
+                      </div>
+                      <h4 className="text-xl font-black text-neutral-950 mb-3">
+                        {topic.name}
+                      </h4>
+                      <div className="mb-4">
+                        {/* <div className="flex justify-between text-sm font-bold text-neutral-950 mb-2">
                         <span>Progress</span>
                         <span>{topic.progress}%</span>
-                      </div>
-                      <div className="w-full bg-neutral-950 rounded-full h-3 border-2 border-neutral-950">
+                      </div> */}
+                        {/* <div className="w-full bg-neutral-950 rounded-full h-3 border-2 border-neutral-950">
                         <div
                           className="bg-primary-500 h-full rounded-full transition-all duration-500"
                           style={{ width: `${topic.progress}%` }}
                         ></div>
+                      </div> */}
                       </div>
-                    </div>
-                    <div className="flex justify-between text-sm font-bold text-neutral-950">
-                      <span>{topic.sessionsCount} sessions</span>
-                      <span>{topic.lastStudied}</span>
-                    </div>
-                  </Card>
+                      <div className="flex justify-between text-sm font-bold text-neutral-950">
+                        {/* <span>{topic.sessionsCount} sessions</span> */}
+                        <span>{topic.lastStudied}</span>
+                      </div>
+                    </Card>
+                  </div>
                 );
               })}
             </div>

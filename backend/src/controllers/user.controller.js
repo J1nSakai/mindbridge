@@ -66,15 +66,17 @@ export const getUserLearningProgress = async (req, res) => {
 
 export const recordNewStudySession = async (req, res) => {
   try {
-    console.log('📥 Received study session request:', {
+    console.log("📥 Received study session request:", {
       body: req.body,
-      headers: req.headers.authorization ? 'Bearer token present' : 'No auth token',
-      user: req.user
+      headers: req.headers.authorization
+        ? "Bearer token present"
+        : "No auth token",
+      user: req.user,
     });
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log('❌ Validation errors:', errors.array());
+      console.log("❌ Validation errors:", errors.array());
       return res.status(400).json({
         error: "Validation failed",
         details: errors.array(),
@@ -85,22 +87,25 @@ export const recordNewStudySession = async (req, res) => {
       userId,
       topic,
       type,
-      duration,
-      score,
       questionsAnswered,
       correctAnswers,
+      totalQuestions,
+      generatedSummary,
+      flashCards,
+      quizData,
+      selectedQuizAnswers,
     } = req.body;
 
-    console.log('📊 Creating session with data:', {
+    console.log("📊 Creating session with data:", {
       userId,
       topic,
       type,
-      duration,
-      score,
       questionsAnswered,
       correctAnswers,
+      totalQuestions,
+      selectedQuizAnswers,
       DATABASE_ID,
-      STUDY_SESSIONS_COLLECTION_ID
+      STUDY_SESSIONS_COLLECTION_ID,
     });
 
     const session = await tablesDB.createRow({
@@ -111,17 +116,17 @@ export const recordNewStudySession = async (req, res) => {
         userId,
         topic,
         type,
-        duration,
-        score: score || null,
         questionsAnswered: questionsAnswered || null,
         correctAnswers: correctAnswers || null,
-        accuracy: questionsAnswered
-          ? Math.round((correctAnswers / questionsAnswered) * 100)
-          : null,
+        totalQuestions: totalQuestions || null,
+        generatedSummary: generatedSummary || null,
+        flashCards: flashCards || null,
+        quizData: quizData || null,
+        selectedQuizAnswers: selectedQuizAnswers || null,
       },
     });
 
-    console.log('✅ Session created successfully:', session.$id);
+    console.log("✅ Session created successfully:", session.$id);
 
     // Update user's overall progress
     await updateUserProgress(userId, session);
@@ -132,24 +137,25 @@ export const recordNewStudySession = async (req, res) => {
         id: session.$id,
         topic: session.topic,
         type: session.type,
-        duration: session.duration,
-        score: session.score,
-        accuracy: session.accuracy,
         createdAt: session.$createdAt,
+        questionsAnswered: session.questionsAnswered,
+        correctAnswers: session.correctAnswers,
+        totalQuestions: session.totalQuestions,
+        selectedQuizAnswers: session.selectedQuizAnswers,
       },
     });
   } catch (error) {
     console.error("❌ Record study session error:", error);
-    console.error('Error details:', {
+    console.error("Error details:", {
       message: error.message,
       code: error.code,
       type: error.type,
-      response: error.response
+      response: error.response,
     });
     res.status(500).json({
       error: "Failed to record session",
       message: error.message || "Unable to save study session",
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      details: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -541,3 +547,57 @@ function generateStudyRecommendations(sessions) {
 
   return recommendations;
 }
+
+// Get topic-specific sessions
+export const getTopicSessions = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { topic } = req.query;
+
+    if (!topic) {
+      return res.status(400).json({
+        success: false,
+        message: "Topic parameter is required",
+      });
+    }
+
+    console.log(`🔍 Fetching sessions for user ${userId}, topic: ${topic}`);
+
+    // Get all sessions for this user and topic
+    const sessions = await tablesDB.listRows({
+      databaseId: DATABASE_ID,
+      tableId: STUDY_SESSIONS_COLLECTION_ID,
+      queries: [
+        Query.equal("userId", userId),
+        Query.equal("topic", topic),
+        Query.orderDesc("$createdAt"),
+        Query.limit(50),
+      ],
+    });
+
+    console.log(
+      `📊 Found ${sessions.rows?.length || 0} sessions for topic: ${topic}`
+    );
+
+    if (!sessions.rows || sessions.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No sessions found for this topic",
+      });
+    }
+
+    // Return the sessions data
+    res.status(200).json({
+      success: true,
+      data: sessions.rows,
+      message: `Found ${sessions.rows.length} sessions for topic: ${topic}`,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching topic sessions:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch topic sessions",
+      error: error.message,
+    });
+  }
+};

@@ -4,6 +4,7 @@ import {
   getUserDashboardData,
   getUserLearningProgress,
   getUserProfileAndPreferences,
+  getTopicSessions,
   recordNewStudySession,
   testAPIConnection,
   updateUserProfileAndPreferences,
@@ -75,6 +76,16 @@ router.get(
   verifyToken,
   checkResourceOwnership(),
   getUserDashboardData
+);
+
+// @route   GET /api/user/topic-sessions/:userId
+// @desc    Get topic-specific sessions
+// @access  Private
+router.get(
+  "/topic-sessions/:userId",
+  verifyToken,
+  checkResourceOwnership(),
+  getTopicSessions
 );
 
 export default router;
