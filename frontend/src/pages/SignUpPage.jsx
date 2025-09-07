@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import HighlightedText from "@/components/ui/HighlightedText";
 import { useAuth } from "../contexts/AuthContext";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { LoadingSpinnerOnly } from "../components/ui/LoadingSpinner";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -22,10 +22,9 @@ const SignUpPage = () => {
     password: "",
     confirmPassword: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState("");
 
-  const { register, error, clearError } = useAuth();
+  const { register, error, clearError, authLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -54,8 +53,6 @@ const SignUpPage = () => {
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
       await register({
         name: formData.name,
@@ -65,14 +62,8 @@ const SignUpPage = () => {
       navigate("/dashboard");
     } catch (error) {
       console.error("Registration failed:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
-
-  if (isSubmitting) {
-    return <LoadingSpinner message="Creating your account..." />;
-  }
 
   return (
     <div className="min-h-screen bg-primary-100 flex items-center justify-center p-6 relative">
@@ -205,10 +196,14 @@ const SignUpPage = () => {
               <Button
                 type="submit"
                 size="lg"
-                disabled={isSubmitting}
+                disabled={authLoading}
                 className="w-full bg-primary-500 text-neutral-50 font-bold text-lg border-4 border-neutral-950 hover:bg-primary-600 disabled:opacity-50"
               >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
+                {authLoading ? (
+                  <LoadingSpinnerOnly message="Creating Account..." />
+                ) : (
+                  "Create Account"
+                )}
               </Button>
             </form>
           </CardContent>

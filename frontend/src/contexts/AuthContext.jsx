@@ -18,7 +18,8 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // For initial auth check
+  const [authLoading, setAuthLoading] = useState(false); // For login/register operations
   const [error, setError] = useState(null);
 
   // Check if user is logged in on app start
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     try {
-      setLoading(true);
+      setAuthLoading(true);
       setError(null);
 
       const response = await authAPI.login({ email, password });
@@ -60,14 +61,14 @@ export const AuthProvider = ({ children }) => {
       setError(error.message);
       throw error;
     } finally {
-      setLoading(false);
+      setAuthLoading(false);
     }
   };
 
   // Register function
   const register = async (userData) => {
     try {
-      setLoading(true);
+      setAuthLoading(true);
       setError(null);
 
       const response = await authAPI.register(userData);
@@ -83,7 +84,7 @@ export const AuthProvider = ({ children }) => {
       setError(error.message);
       throw error;
     } finally {
-      setLoading(false);
+      setAuthLoading(false);
     }
   };
 
@@ -107,6 +108,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    authLoading,
     error,
     login,
     register,

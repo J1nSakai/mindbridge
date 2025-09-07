@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import HighlightedText from "../components/ui/HighlightedText";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import { userAPI } from "../services/api";
 import {
   BookOpen,
@@ -15,6 +16,11 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 // Simple Card component matching neubrutalism style
 const Card = ({ children, className = "" }) => (
@@ -36,8 +42,6 @@ const DashboardPage = () => {
   });
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const dropdownRef = useRef(null);
 
   // Helper function to extract topics from study sessions
   const extractTopicsFromSessions = (sessions) => {
@@ -169,20 +173,6 @@ const DashboardPage = () => {
     fetchDashboardData();
   }, [userId]);
 
-  // Handle click outside dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowProfileDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const handleTopicClick = (topicId) => {
     // Navigate to topic page with topic ID
     console.log("Topic clicked:", topicId);
@@ -196,17 +186,24 @@ const DashboardPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-neutral-600">Loading...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading your dashboard..." />;
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 font-sans">
+    <div className="min-h-screen bg-primary-100 font-sans relative">
+      {/* Grid Background */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #87888c 1px, transparent 1px),
+            linear-gradient(to bottom, #87888c 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+        }}
+      />
       {/* Header */}
-      <header className="bg-primary-400 border-b-8 border-neutral-950 shadow-[0px_8px_0px_0px_rgba(0,0,0,1)]">
+      <header className="bg-primary-400 border-b-8 border-neutral-950 shadow-[0px_8px_0px_0px_rgba(0,0,0,1)] relative z-10">
         <div className="max-w-6xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             {/* Logo/Brand */}
@@ -216,55 +213,40 @@ const DashboardPage = () => {
                   MB
                 </span>
               </div>
-              <h1 className="text-3xl font-extrabold text-neutral-50 hover:scale-105 transition-transform duration-300">
+              <h1 className="text-3xl font-extrabold text-neutral-50">
                 MindBridge
               </h1>
             </div>
 
             {/* Profile Section */}
-            <div className="flex items-center gap-4 relative" ref={dropdownRef}>
+            <div className="flex items-center gap-4 relative">
               <div className="text-right text-neutral-50">
                 <p className="text-lg font-bold">{user?.name || "Learner"}</p>
                 <p className="text-sm opacity-90">Level {stats.level}</p>
               </div>
-              <Avatar
-                size="xl"
-                className="cursor-pointer border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:scale-110 hover:rotate-3 transition-all duration-300"
-                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-              >
-                <AvatarFallback className="text-xl">
-                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
 
-              {/* Profile Dropdown */}
-              {showProfileDropdown && (
-                <div className="absolute top-full right-0 mt-4 w-64 z-50">
-                  <Card className="p-0 animate-fade-in">
-                    <div className="p-4 border-b-2 border-neutral-200">
-                      <div className="flex items-center gap-3">
-                        <Avatar size="md">
-                          <AvatarFallback>
-                            {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-bold text-neutral-950">
-                            {user?.name || "Learner"}
-                          </p>
-
-                          <p className="text-xs text-neutral-500">
-                            Level {stats.level}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Avatar
+                    size="xl"
+                    className="cursor-pointer border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:scale-110 hover:rotate-3 transition-all duration-300"
+                  >
+                    <AvatarFallback className="text-xl">
+                      {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </PopoverTrigger>
+                {/* Profile Dropdown */}
+                <PopoverContent
+                  sideOffset={10}
+                  align="left"
+                  className={"bg-neutral-50"}
+                >
+                  <div className="flex flex-col">
                     <div className="p-2">
                       <button
                         onClick={() => {
                           navigate("/profile");
-                          setShowProfileDropdown(false);
                         }}
                         className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-primary-100 transition-colors text-left"
                       >
@@ -277,7 +259,6 @@ const DashboardPage = () => {
                       <button
                         onClick={() => {
                           // Navigate to settings when implemented
-                          setShowProfileDropdown(false);
                         }}
                         className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-primary-100 transition-colors text-left"
                       >
@@ -291,7 +272,6 @@ const DashboardPage = () => {
                         <button
                           onClick={() => {
                             logout();
-                            setShowProfileDropdown(false);
                           }}
                           className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-100 transition-colors text-left"
                         >
@@ -300,18 +280,18 @@ const DashboardPage = () => {
                         </button>
                       </div>
                     </div>
-                  </Card>
-                </div>
-              )}
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="max-w-6xl mx-auto px-6 py-12 relative z-10">
         {/* Welcome Message */}
         <div className="mb-12 text-center">
-          <h2 className="text-5xl font-black text-neutral-950 mb-4 hover:scale-105 transition-transform duration-300">
+          <h2 className="text-5xl font-black text-neutral-950 mb-4">
             Welcome back,{" "}
             <HighlightedText>{user?.name || "Learner"}</HighlightedText>!
           </h2>
@@ -324,7 +304,7 @@ const DashboardPage = () => {
             <HighlightedText bgColor="bg-neutral-950">Progress</HighlightedText>
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <Card className="text-center p-6 hover:scale-105 hover:rotate-1 transition-all duration-300">
+            <Card className="text-center p-6 hover:-rotate-3 transition-all duration-200">
               <div className="bg-primary-500 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 rotate-3">
                 <BookOpen className="text-neutral-50 text-2xl" />
               </div>
@@ -334,7 +314,7 @@ const DashboardPage = () => {
               <div className="text-neutral-950 font-bold">Study Sessions</div>
             </Card>
 
-            <Card className="text-center p-6 hover:scale-105 hover:-rotate-1 transition-all duration-300">
+            <Card className="text-center p-6 hover:rotate-3 transition-all duration-200">
               <div className="bg-primary-600 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 -rotate-3">
                 <TrendingUp className="text-neutral-50 text-2xl" />
               </div>
@@ -344,7 +324,7 @@ const DashboardPage = () => {
               <div className="text-neutral-950 font-bold">Level</div>
             </Card>
 
-            <Card className="text-center p-6 hover:scale-105 hover:rotate-2 transition-all duration-300">
+            <Card className="text-center p-6 hover:-rotate-3 transition-all duration-200">
               <div className="bg-neutral-950 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 rotate-6">
                 <Star className="text-neutral-50 text-2xl" />
               </div>
@@ -354,7 +334,7 @@ const DashboardPage = () => {
               <div className="text-neutral-950 font-bold">Achievements</div>
             </Card>
 
-            <Card className="text-center p-6 hover:scale-105 hover:-rotate-2 transition-all duration-300">
+            <Card className="text-center p-6 hover:rotate-3 transition-all duration-200">
               <div className="bg-primary-300 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 -rotate-6">
                 <Trophy className="text-neutral-950 text-2xl" />
               </div>

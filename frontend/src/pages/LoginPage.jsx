@@ -13,16 +13,16 @@ import {
 } from "@/components/ui/card";
 import HighlightedText from "@/components/ui/HighlightedText";
 import { useAuth } from "../contexts/AuthContext";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
+import LoadingSpinner, {
+  LoadingSpinnerOnly,
+} from "../components/ui/LoadingSpinner";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const { login, error, clearError } = useAuth();
+  const { login, error, clearError, authLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -37,21 +37,18 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     try {
       await login(formData.email, formData.password);
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
-  if (isSubmitting) {
-    return <LoadingSpinner message="Logging you in..." />;
-  }
+  // if (isSubmitting) {
+  //   return <LoadingSpinner message="Logging you in..." />;
+  // }
 
   return (
     <div className="min-h-screen bg-primary-100 flex items-center justify-center p-6 relative">
@@ -151,24 +148,19 @@ const LoginPage = () => {
               <Button
                 type="submit"
                 size="lg"
-                disabled={isSubmitting}
+                disabled={authLoading}
                 className="w-full bg-primary-500 text-neutral-50 font-bold text-lg border-4 border-neutral-950 hover:bg-primary-600 disabled:opacity-50"
               >
-                {isSubmitting ? "Logging in..." : "Login"}
+                {authLoading ? (
+                  <LoadingSpinnerOnly message="Logging you in..." />
+                ) : (
+                  "Login"
+                )}
               </Button>
             </form>
           </CardContent>
 
           <CardFooter className="flex-col space-y-4">
-            <Button
-              type="button"
-              variant="neutral"
-              size="lg"
-              className="w-full font-bold text-lg border-4 border-neutral-950 "
-            >
-              Login with Google
-            </Button>
-
             <div className="text-center pt-4">
               <p className="text-neutral-700 font-bold">
                 Don't have an account?{" "}

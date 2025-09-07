@@ -5,8 +5,19 @@ const ProfilePage = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-neutral-50 p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-primary-100 p-6 relative">
+      {/* Grid Background */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #87888c 1px, transparent 1px),
+            linear-gradient(to bottom, #87888c 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+        }}
+      />
+      <div className="max-w-4xl mx-auto relative z-10">
         <h1 className="text-4xl font-extrabold text-neutral-950 mb-8">
           👤 Profile
         </h1>

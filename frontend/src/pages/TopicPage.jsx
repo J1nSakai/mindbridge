@@ -4,12 +4,12 @@ import { useAuth } from "../contexts/AuthContext";
 import { userAPI } from "../services/api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import {
   ArrowLeft,
   BookOpen,
   Brain,
   Target,
-  CheckCircle,
   XCircle,
   RotateCcw,
 } from "lucide-react";
@@ -116,16 +116,7 @@ const TopicPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <div className="text-center">
-          <Brain className="w-16 h-16 animate-spin mx-auto mb-4 text-primary-500" />
-          <p className="text-xl font-bold text-neutral-950">
-            Loading topic data...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading topic data..." />;
   }
 
   if (!topicData) {
@@ -154,14 +145,24 @@ const TopicPage = () => {
   const topicName = topicData.topic;
 
   return (
-    <div className="min-h-screen bg-neutral-50 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-primary-100 p-6 relative">
+      {/* Grid Background */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #87888c 1px, transparent 1px),
+            linear-gradient(to bottom, #87888c 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+        }}
+      />
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
         <div className="mb-8">
           <Button
             onClick={() => navigate("/dashboard")}
-            variant="outline"
-            className="mb-4 border-2 border-neutral-950"
+            className="mb-4 bg-primary-400"
           >
             <ArrowLeft className="mr-2 w-4 h-4" />
             Back to Dashboard

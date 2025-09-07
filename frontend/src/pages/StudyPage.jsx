@@ -15,6 +15,18 @@ import {
 import { useNavigate } from "react-router";
 import Markdown from "react-markdown";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { LoadingSpinnerOnly } from "@/components/ui/LoadingSpinner";
+import HighlightedText from "@/components/ui/HighlightedText";
 
 const StudyPage = () => {
   const { userId } = useAuth();
@@ -210,11 +222,23 @@ const StudyPage = () => {
   // Render input step
   if (currentStep === "input") {
     return (
-      <div className="min-h-screen bg-neutral-50 p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-primary-100 p-6 relative">
+        {/* Grid Background */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #87888c 1px, transparent 1px),
+              linear-gradient(to bottom, #87888c 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="max-w-4xl mx-auto relative z-10">
           <div className="text-center mb-12">
             <h1 className="text-5xl font-black text-neutral-950 mb-4">
-              📚 What do you want to learn?
+              What do you want to{" "}
+              <HighlightedText bgColor="bg-primary-500">learn</HighlightedText>?
             </h1>
             <p className="text-xl text-neutral-600 font-bold">
               Enter any topic you'd like to understand better
@@ -225,44 +249,51 @@ const StudyPage = () => {
             <CardContent>
               <form onSubmit={handleTopicSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-xl font-bold text-neutral-950 mb-3">
+                  <Label className="block text-xl font-bold text-neutral-950 mb-3">
                     Topic or Question
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="text"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g., How do React hooks work? or JavaScript closures"
-                    className="w-full p-4 text-lg border-4 border-neutral-950 rounded-lg font-bold focus:outline-none focus:ring-4 focus:ring-primary-300"
+                    className="w-full text-lg  border-neutral-950 rounded-lg font-bold focus:outline-none focus-visible:border-primary-500"
                     disabled={loading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xl font-bold text-neutral-950 mb-3">
+                  <Label className="block text-xl font-bold text-neutral-950 mb-3">
                     Difficulty Level
-                  </label>
-                  <select
+                  </Label>
+                  <Select
                     value={difficulty}
-                    onChange={(e) => setDifficulty(e.target.value)}
-                    className="w-full p-4 text-lg border-4 border-neutral-950 rounded-lg font-bold focus:outline-none focus:ring-4 focus:ring-primary-300"
+                    onChange={(value) => setDifficulty(value)}
                     disabled={loading}
                   >
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
+                    <SelectTrigger className="w-full text-lg  bg-white border-neutral-950  rounded-lg font-bold focus:outline-none focus-visible:border-primary-500">
+                      <SelectValue placeholder="Select a difficulty level" />
+                    </SelectTrigger>
+                    <SelectContent className={"bg-neutral-50"}>
+                      <SelectGroup>
+                        <SelectItem value="beginner">Beginner</SelectItem>
+                        <SelectItem value="intermediate">
+                          Intermediate
+                        </SelectItem>
+                        <SelectItem value="advanced">Advanced</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <Button
                   type="submit"
                   disabled={!topic.trim() || loading}
-                  className="w-full bg-neutral-950 text-neutral-50 font-bold text-xl py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                  className="w-full bg-primary-400 text-neutral-50 font-bold text-xl py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
                 >
                   {loading ? (
                     <>
-                      <Brain className="mr-2 animate-spin" />
-                      Generating Content...
+                      <LoadingSpinnerOnly message="Generating Content..." />
                     </>
                   ) : (
                     <>
@@ -282,8 +313,19 @@ const StudyPage = () => {
   // Render study step (summary + flashcards)
   if (currentStep === "study") {
     return (
-      <div className="min-h-screen bg-neutral-50 p-6">
-        <div className="max-w-6xl mx-auto">
+      <div className="min-h-screen bg-primary-100 p-6 relative">
+        {/* Grid Background */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #87888c 1px, transparent 1px),
+              linear-gradient(to bottom, #87888c 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex items-center justify-between mb-8">
             <h1 className=" flex flex-row  items-center justify-center text-4xl font-black text-neutral-950">
               <BookOpen className="mr-2" size={40} /> Study: {topic}
@@ -301,7 +343,7 @@ const StudyPage = () => {
             {/* Summary Section */}
             <div>
               <h2 className="text-3xl font-black text-neutral-950 mb-6">
-                📝 Summary
+                Summary
               </h2>
               <Card className="p-6 bg-primary-100 h-fit">
                 <CardContent>
@@ -313,7 +355,7 @@ const StudyPage = () => {
             {/* Flashcards Section */}
             <div className="select-none">
               <h2 className="text-3xl font-black text-neutral-950 mb-6">
-                🃏 Flashcards
+                Flashcards
               </h2>
 
               {flashcards.length > 0 && (
@@ -390,7 +432,14 @@ const StudyPage = () => {
                 Ready to test your knowledge?
               </h3>
               <p className="text-lg text-neutral-600 font-bold mb-6">
-                Take the quiz to see how much you've learned!
+                Take the quiz to see how much you've learned! <br />
+                <span>
+                  Note: This topic will only be saved for you{" "}
+                  <HighlightedText bgColor="bg-primary-500">
+                    AFTER
+                  </HighlightedText>{" "}
+                  completing the quiz.
+                </span>
               </p>
 
               {/* Question Count Selector */}
@@ -434,11 +483,22 @@ const StudyPage = () => {
     const currentQuestion = quiz?.questions[currentQuestionIndex];
 
     return (
-      <div className="min-h-screen bg-neutral-50 p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-primary-100 p-6 relative">
+        {/* Grid Background */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #87888c 1px, transparent 1px),
+              linear-gradient(to bottom, #87888c 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-black text-neutral-950">
-              ❓ Quiz: {topic}
+            <h1 className="text-4xl underline font-black text-neutral-950">
+              Quiz: {topic}
             </h1>
             <Button
               onClick={() => setCurrentStep("study")}
@@ -537,8 +597,19 @@ const StudyPage = () => {
   // Render completion step
   if (currentStep === "complete") {
     return (
-      <div className="min-h-screen bg-neutral-50 p-6">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="min-h-screen bg-primary-100 p-6 relative">
+        {/* Grid Background */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #87888c 1px, transparent 1px),
+              linear-gradient(to bottom, #87888c 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="mb-12">
             <div className="text-8xl mb-6">🎉</div>
             <h1 className="text-5xl font-black text-neutral-950 mb-4">
