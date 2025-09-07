@@ -27,6 +27,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { LoadingSpinnerOnly } from "@/components/ui/LoadingSpinner";
 import HighlightedText from "@/components/ui/HighlightedText";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const StudyPage = () => {
   const { userId } = useAuth();
@@ -49,8 +56,8 @@ const StudyPage = () => {
   const [quiz, setQuiz] = useState(null);
 
   // Flashcard states
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [cardFlipStates, setCardFlipStates] = useState({}); // Track flip state for each card
+  const [flipped, setFlipped] = useState(false);
 
   // Quiz states
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -201,7 +208,6 @@ const StudyPage = () => {
     setSummary(null);
     setFlashcards([]);
     setQuiz(null);
-    setCurrentCardIndex(0);
     setCardFlipStates({});
     setCurrentQuestionIndex(0);
     setSelectedAnswers({});
@@ -210,13 +216,17 @@ const StudyPage = () => {
     setFlashcardsSessionData(null);
   };
 
-  const toggleCardFlip = (cardIndex) => {
-    console.log("Flipping card", cardIndex);
-    setCardFlipStates((prev) => ({
-      ...prev,
-      [cardIndex]: !prev[cardIndex],
-    }));
-    console.log("New flip state:", !cardFlipStates[cardIndex]);
+  const toggleCardFlip = (index) => {
+    setTimeout(
+      () =>
+        setCardFlipStates((prev) => ({
+          ...prev,
+          [index]: !prev[index],
+        })),
+      400
+    );
+    setFlipped(true);
+    setTimeout(() => setFlipped(false), 800); // reset after animation ends
   };
 
   // Render input step
@@ -360,66 +370,52 @@ const StudyPage = () => {
 
               {flashcards.length > 0 && (
                 <>
-                  <div className="text-center mb-4 ">
-                    <span className="text-lg font-bold text-neutral-600">
-                      Card {currentCardIndex + 1} of {flashcards.length}
-                    </span>
-                  </div>
-                  <div onClick={() => toggleCardFlip(currentCardIndex)}>
-                    <Card
-                      className={`p-8 mb-6 cursor-pointer transition-all duration-300 hover:scale-105 ${
-                        cardFlipStates[currentCardIndex]
-                          ? "bg-primary-400"
-                          : "bg-primary-200"
-                      }`}
-                    >
-                      <div className="text-center min-h-[150px] flex items-center justify-center">
-                        <div className="text-xl font-bold text-neutral-950">
-                          {cardFlipStates[currentCardIndex]
-                            ? flashcards[currentCardIndex]?.back
-                            : flashcards[currentCardIndex]?.front}
-                        </div>
-                      </div>
+                  <Carousel
+                    opts={{
+                      watchDrag: false, // Disables drag/swipe
+                    }}
+                  >
+                    <CarouselContent>
+                      {flashcards.map((flashcard, index) => {
+                        return (
+                          <CarouselItem
+                            key={index}
+                            className={`select-none ${
+                              flipped ? "animate-flip-horizontal-bottom" : ""
+                            }`}
+                          >
+                            <Card
+                              className={`p-8 mb-6 cursor-pointer transition-all duration-300 ${
+                                cardFlipStates[index]
+                                  ? "bg-primary-400"
+                                  : "bg-primary-200"
+                              }`}
+                              onClick={() => toggleCardFlip(index)}
+                            >
+                              <div className="text-center min-h-[150px] flex items-center justify-center">
+                                <div className="text-xl font-bold text-neutral-950">
+                                  {cardFlipStates[index]
+                                    ? flashcards[index]?.back
+                                    : flashcards[index]?.front}
+                                </div>
+                              </div>
 
-                      <div className="text-center mt-4">
-                        <span className="text-sm font-bold text-neutral-600">
-                          Click to{" "}
-                          {cardFlipStates[currentCardIndex]
-                            ? "see question"
-                            : "reveal answer"}
-                        </span>
-                      </div>
-                    </Card>
-                  </div>
-
-                  {/* Flashcard Navigation */}
-                  <div className="flex justify-between items-center mb-6">
-                    <Button
-                      onClick={() => {
-                        if (currentCardIndex > 0) {
-                          setCurrentCardIndex(currentCardIndex - 1);
-                        }
-                      }}
-                      disabled={currentCardIndex === 0}
-                      className="bg-neutral-300 text-neutral-950 font-bold px-4 py-2"
-                    >
-                      <ArrowLeft className="mr-2" />
-                      Previous
-                    </Button>
-
-                    <Button
-                      onClick={() => {
-                        if (currentCardIndex < flashcards.length - 1) {
-                          setCurrentCardIndex(currentCardIndex + 1);
-                        }
-                      }}
-                      disabled={currentCardIndex === flashcards.length - 1}
-                      className="bg-primary-500 text-neutral-50 font-bold px-4 py-2"
-                    >
-                      Next
-                      <ArrowRight className="ml-2" />
-                    </Button>
-                  </div>
+                              <div className="text-center mt-4">
+                                <span className="text-sm font-bold text-neutral-600">
+                                  Click to{" "}
+                                  {cardFlipStates[index]
+                                    ? "see question"
+                                    : "reveal answer"}
+                                </span>
+                              </div>
+                            </Card>
+                          </CarouselItem>
+                        );
+                      })}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </Carousel>
                 </>
               )}
             </div>

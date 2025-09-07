@@ -14,6 +14,13 @@ import {
   RotateCcw,
 } from "lucide-react";
 import Markdown from "react-markdown";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const TopicPage = () => {
   const { topicId } = useParams();
@@ -25,6 +32,8 @@ const TopicPage = () => {
   const [currentView, setCurrentView] = useState("summary"); // summary, flashcards, quiz
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [cardFlipStates, setCardFlipStates] = useState({});
+  const [flipped, setFlipped] = useState(false);
+
   const [hasCompletedQuiz, setHasCompletedQuiz] = useState(false);
   const [savedQuizResults, setSavedQuizResults] = useState(null);
 
@@ -91,10 +100,16 @@ const TopicPage = () => {
   };
 
   const toggleCardFlip = (index) => {
-    setCardFlipStates((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
+    setTimeout(
+      () =>
+        setCardFlipStates((prev) => ({
+          ...prev,
+          [index]: !prev[index],
+        })),
+      400
+    );
+    setFlipped(true);
+    setTimeout(() => setFlipped(false), 800); // reset after animation ends
   };
 
   const calculateQuizResults = () => {
@@ -179,7 +194,10 @@ const TopicPage = () => {
         {/* Navigation Tabs */}
         <div className="flex gap-4 mb-8">
           <Button
-            onClick={() => setCurrentView("summary")}
+            onClick={() => {
+              setCurrentView("summary");
+              setCurrentCardIndex(0);
+            }}
             className={`font-bold px-6 py-3 ${
               currentView === "summary"
                 ? "bg-neutral-950 text-neutral-50"
@@ -191,7 +209,10 @@ const TopicPage = () => {
           </Button>
 
           <Button
-            onClick={() => setCurrentView("flashcards")}
+            onClick={() => {
+              setCurrentView("flashcards");
+              setCurrentCardIndex(0);
+            }}
             className={`font-bold px-6 py-3 ${
               currentView === "flashcards"
                 ? "bg-neutral-950 text-neutral-50"
@@ -205,6 +226,7 @@ const TopicPage = () => {
           <Button
             onClick={() => {
               setCurrentView("quiz");
+              setCurrentCardIndex(0);
             }}
             className={`font-bold px-6 py-3 ${
               currentView === "quiz"
@@ -236,73 +258,92 @@ const TopicPage = () => {
                 Flashcards ({currentCardIndex + 1} of{" "}
                 {JSON.parse(topicData.flashCards).length})
               </h2>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() =>
-                    setCurrentCardIndex(Math.max(0, currentCardIndex - 1))
-                  }
-                  disabled={currentCardIndex === 0}
-                  className="bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
-                >
-                  Previous
-                </Button>
-                <Button
-                  onClick={() =>
-                    setCurrentCardIndex(
-                      Math.min(
-                        topicData.flashCards.length - 1,
-                        currentCardIndex + 1
-                      )
-                    )
-                  }
-                  disabled={
-                    currentCardIndex ===
-                    JSON.parse(topicData.flashCards).length - 1
-                  }
-                  className="bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
-                >
-                  Next
-                </Button>
-              </div>
             </div>
-
-            <Card
-              className="h-96 cursor-pointer transform transition-transform hover:scale-105"
-              onClick={() => toggleCardFlip(currentCardIndex)}
+            <Carousel
+              opts={{
+                watchDrag: false, // Disables drag/swipe
+              }}
             >
-              <CardContent className="h-full flex items-center justify-center p-8">
-                <div className="text-center">
-                  {!cardFlipStates[currentCardIndex] ? (
-                    <>
-                      <h3 className="text-xl font-bold text-neutral-950 mb-4">
-                        Question
-                      </h3>
-                      <p className="text-lg text-neutral-700">
-                        {
-                          JSON.parse(topicData.flashCards)[currentCardIndex]
-                            ?.front
-                        }
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <h3 className="text-xl font-bold text-neutral-950 mb-4">
-                        Answer
-                      </h3>
-                      <div className="text-lg text-neutral-700">
-                        <Markdown>
-                          {
-                            JSON.parse(topicData.flashCards)[currentCardIndex]
-                              ?.back
-                          }
-                        </Markdown>
-                      </div>
-                    </>
-                  )}
-                  <p className="text-sm text-neutral-500 mt-6">Click to flip</p>
-                </div>
-              </CardContent>
-            </Card>
+              <CarouselContent>
+                {Array.from({
+                  length: JSON.parse(topicData.flashCards).length,
+                }).map((_, index) => {
+                  return (
+                    <CarouselItem
+                      key={index}
+                      className={`select-none ${
+                        flipped ? "animate-flip-horizontal-bottom" : ""
+                      }`}
+                    >
+                      <Card
+                        className={`h-96 cursor-pointer `}
+                        onClick={() => toggleCardFlip(currentCardIndex)}
+                      >
+                        <CardContent className="h-full flex items-center justify-center p-8">
+                          <div className="text-center">
+                            {!cardFlipStates[currentCardIndex] ? (
+                              <>
+                                <h3 className="text-xl text-neutral-950 mb-4">
+                                  Question
+                                </h3>
+                                <p className="text-lg font-bold text-neutral-700">
+                                  {
+                                    <Markdown>
+                                      {
+                                        JSON.parse(topicData.flashCards)[
+                                          currentCardIndex
+                                        ]?.front
+                                      }
+                                    </Markdown>
+                                  }
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <h3 className="text-xl text-neutral-950 mb-4">
+                                  Answer
+                                </h3>
+                                <div className="text-lg font-bold text-neutral-700">
+                                  <Markdown>
+                                    {
+                                      JSON.parse(topicData.flashCards)[
+                                        currentCardIndex
+                                      ]?.back
+                                    }
+                                  </Markdown>
+                                </div>
+                              </>
+                            )}
+                            <p className="text-sm text-neutral-500 mt-6">
+                              Click to flip
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+              <button
+                onClick={() =>
+                  setCurrentCardIndex(Math.max(0, currentCardIndex - 1))
+                }
+              >
+                <CarouselPrevious size="sm" />
+              </button>
+              <button
+                onClick={() =>
+                  setCurrentCardIndex(
+                    Math.min(
+                      topicData.flashCards.length - 1,
+                      currentCardIndex + 1
+                    )
+                  )
+                }
+              >
+                <CarouselNext />
+              </button>
+            </Carousel>
           </div>
         )}
 

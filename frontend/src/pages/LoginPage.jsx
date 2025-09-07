@@ -126,12 +126,6 @@ const LoginPage = () => {
                   >
                     Password
                   </Label>
-                  <a
-                    href="#"
-                    className="text-primary-600 font-bold hover:text-primary-500 hover:-translate-y-1 transition-all text-sm"
-                  >
-                    Forgot password?
-                  </a>
                 </div>
                 <Input
                   id="password"
