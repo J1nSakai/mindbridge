@@ -160,7 +160,7 @@ const TopicPage = () => {
   const topicName = topicData.topic;
 
   return (
-    <div className="min-h-screen bg-primary-100 p-6 relative">
+    <div className="min-h-screen bg-primary-100 p-4 sm:p-6 relative">
       {/* Grid Background */}
       <div
         className="absolute inset-0 opacity-30"
@@ -174,31 +174,31 @@ const TopicPage = () => {
       />
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Button
             onClick={() => navigate("/dashboard")}
-            className="mb-4 bg-primary-400"
+            className="mb-4 bg-primary-400 px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto"
           >
             <ArrowLeft className="mr-2 w-4 h-4" />
             Back to Dashboard
           </Button>
 
-          <h1 className="text-4xl font-black text-neutral-950 mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-950 mb-2 px-2 sm:px-0">
             {topicName}
           </h1>
-          <p className="text-neutral-600 font-bold">
+          <p className="text-neutral-600 font-bold text-sm sm:text-base px-2 sm:px-0">
             Review your study materials and test your knowledge
           </p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 px-2 sm:px-0">
           <Button
             onClick={() => {
               setCurrentView("summary");
               setCurrentCardIndex(0);
             }}
-            className={`font-bold px-6 py-3 ${
+            className={`font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base ${
               currentView === "summary"
                 ? "bg-neutral-950 text-neutral-50"
                 : "bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
@@ -213,7 +213,7 @@ const TopicPage = () => {
               setCurrentView("flashcards");
               setCurrentCardIndex(0);
             }}
-            className={`font-bold px-6 py-3 ${
+            className={`font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base ${
               currentView === "flashcards"
                 ? "bg-neutral-950 text-neutral-50"
                 : "bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
@@ -228,7 +228,7 @@ const TopicPage = () => {
               setCurrentView("quiz");
               setCurrentCardIndex(0);
             }}
-            className={`font-bold px-6 py-3 ${
+            className={`font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base ${
               currentView === "quiz"
                 ? "bg-neutral-950 text-neutral-50"
                 : "bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
@@ -241,20 +241,20 @@ const TopicPage = () => {
 
         {/* Content Area */}
         {currentView === "summary" && (
-          <Card className="p-8">
-            <h2 className="text-2xl font-black text-neutral-950 mb-6">
+          <Card className="p-4 sm:p-6 lg:p-8 mx-2 sm:mx-0">
+            <h2 className="text-xl sm:text-2xl font-black text-neutral-950 mb-4 sm:mb-6">
               Study Summary
             </h2>
-            <div className="prose prose-lg max-w-none">
+            <div className="prose prose-sm sm:prose-lg max-w-none">
               <Markdown>{topicData.generatedSummary}</Markdown>
             </div>
           </Card>
         )}
 
         {currentView === "flashcards" && topicData.flashCards && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 mx-2 sm:mx-0">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-black text-neutral-950">
+              <h2 className="text-xl sm:text-2xl font-black text-neutral-950">
                 Flashcards ({currentCardIndex + 1} of{" "}
                 {JSON.parse(topicData.flashCards).length})
               </h2>
@@ -263,6 +263,7 @@ const TopicPage = () => {
               opts={{
                 watchDrag: false, // Disables drag/swipe
               }}
+              className={"w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto"}
             >
               <CarouselContent>
                 {Array.from({
@@ -276,17 +277,17 @@ const TopicPage = () => {
                       }`}
                     >
                       <Card
-                        className={`h-96 cursor-pointer `}
+                        className={`h-80 sm:h-96 cursor-pointer `}
                         onClick={() => toggleCardFlip(currentCardIndex)}
                       >
-                        <CardContent className="h-full flex items-center justify-center p-8">
+                        <CardContent className="h-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
                           <div className="text-center">
                             {!cardFlipStates[currentCardIndex] ? (
                               <>
-                                <h3 className="text-xl text-neutral-950 mb-4">
+                                <h3 className="text-lg sm:text-xl text-neutral-950 mb-3 sm:mb-4">
                                   Question
                                 </h3>
-                                <p className="text-lg font-bold text-neutral-700">
+                                <p className="text-base sm:text-lg font-bold text-neutral-700">
                                   {
                                     <Markdown>
                                       {
@@ -300,10 +301,10 @@ const TopicPage = () => {
                               </>
                             ) : (
                               <>
-                                <h3 className="text-xl text-neutral-950 mb-4">
+                                <h3 className="text-lg sm:text-xl text-neutral-950 mb-3 sm:mb-4">
                                   Answer
                                 </h3>
-                                <div className="text-lg font-bold text-neutral-700">
+                                <div className="text-base sm:text-lg font-bold text-neutral-700">
                                   <Markdown>
                                     {
                                       JSON.parse(topicData.flashCards)[
@@ -314,7 +315,7 @@ const TopicPage = () => {
                                 </div>
                               </>
                             )}
-                            <p className="text-sm text-neutral-500 mt-6">
+                            <p className="text-xs sm:text-sm text-neutral-500 mt-4 sm:mt-6">
                               Click to flip
                             </p>
                           </div>
@@ -348,46 +349,48 @@ const TopicPage = () => {
         )}
 
         {currentView === "quiz" && topicData.quizData && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 mx-2 sm:mx-0">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-black text-neutral-950">
+              <h2 className="text-xl sm:text-2xl font-black text-neutral-950">
                 Quiz Results
               </h2>
             </div>
 
-            <Card className="p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <Card className="p-6 bg-primary-100">
-                  <div className="text-3xl font-black text-primary-600 mb-2">
+            <Card className="p-4 sm:p-6 lg:p-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <Card className="p-4 sm:p-6 bg-primary-100">
+                  <div className="text-2xl sm:text-3xl font-black text-primary-600 mb-2">
                     {calculateQuizResults().score}%
                   </div>
-                  <div className="font-bold text-neutral-950">Score</div>
+                  <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                    Score
+                  </div>
                 </Card>
 
-                <Card className="p-6 bg-neutral-100">
-                  <div className="text-3xl font-black text-neutral-950 mb-2">
+                <Card className="p-4 sm:p-6 bg-neutral-100">
+                  <div className="text-2xl sm:text-3xl font-black text-neutral-950 mb-2">
                     {calculateQuizResults().correctAnswers}/
                     {calculateQuizResults().totalQuestions ||
                       JSON.parse(topicData.quizData).length}
                   </div>
-                  <div className="font-bold text-neutral-950">
+                  <div className="font-bold text-neutral-950 text-sm sm:text-base">
                     Correct Answers
                   </div>
                 </Card>
               </div>
 
-              <Card className="p-6 bg-neutral-50">
+              <Card className="p-4 sm:p-6 bg-neutral-50">
                 <div className="text-center">
-                  <h3 className="text-lg font-bold text-neutral-950 mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-neutral-950 mb-2">
                     Quiz Completed During Topic Creation
                   </h3>
-                  <p className="text-neutral-600 mb-4">
+                  <p className="text-neutral-600 mb-4 text-sm sm:text-base">
                     This quiz was completed when you first created this topic.
                     Your performance is shown above.
                   </p>
                   <Button
                     onClick={() => navigate("/study")}
-                    className="bg-primary-500 text-white font-bold"
+                    className="bg-primary-500 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base"
                   >
                     <RotateCcw className="mr-2 w-4 h-4" />
                     Retake Quiz

@@ -34,6 +34,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Star4 from "@/components/stars/s4";
 
 const StudyPage = () => {
   const { userId } = useAuth();
@@ -232,7 +233,7 @@ const StudyPage = () => {
   // Render input step
   if (currentStep === "input") {
     return (
-      <div className="min-h-screen bg-primary-100 p-6 relative">
+      <div className="min-h-screen bg-primary-100 p-4 sm:p-6 relative">
         {/* Grid Background */}
         <div
           className="absolute inset-0 opacity-30"
@@ -245,21 +246,24 @@ const StudyPage = () => {
           }}
         />
         <div className="max-w-4xl mx-auto relative z-10">
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-black text-neutral-950 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-950 mb-3 sm:mb-4">
               What do you want to{" "}
               <HighlightedText bgColor="bg-primary-500">learn</HighlightedText>?
             </h1>
-            <p className="text-xl text-neutral-600 font-bold">
+            <p className="text-lg sm:text-xl text-neutral-600 font-bold px-4">
               Enter any topic you'd like to understand better
             </p>
           </div>
 
-          <Card className="p-8 bg-primary-200">
+          <Card className="p-4 sm:p-6 lg:p-8 bg-primary-200">
             <CardContent>
-              <form onSubmit={handleTopicSubmit} className="space-y-6">
+              <form
+                onSubmit={handleTopicSubmit}
+                className="space-y-4 sm:space-y-6"
+              >
                 <div>
-                  <Label className="block text-xl font-bold text-neutral-950 mb-3">
+                  <Label className="block text-lg sm:text-xl font-bold text-neutral-950 mb-2 sm:mb-3">
                     Topic or Question
                   </Label>
                   <Input
@@ -267,13 +271,13 @@ const StudyPage = () => {
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g., How do React hooks work? or JavaScript closures"
-                    className="w-full text-lg  border-neutral-950 rounded-lg font-bold focus:outline-none focus-visible:border-primary-500"
+                    className="w-full text-base sm:text-lg border-neutral-950 rounded-lg font-bold focus:outline-none focus-visible:border-primary-500"
                     disabled={loading}
                   />
                 </div>
 
                 <div>
-                  <Label className="block text-xl font-bold text-neutral-950 mb-3">
+                  <Label className="block text-lg sm:text-xl font-bold text-neutral-950 mb-2 sm:mb-3">
                     Difficulty Level
                   </Label>
                   <Select
@@ -281,7 +285,7 @@ const StudyPage = () => {
                     onChange={(value) => setDifficulty(value)}
                     disabled={loading}
                   >
-                    <SelectTrigger className="w-full text-lg  bg-white border-neutral-950  rounded-lg font-bold focus:outline-none focus-visible:border-primary-500">
+                    <SelectTrigger className="w-full text-base sm:text-lg bg-white border-neutral-950 rounded-lg font-bold focus:outline-none focus-visible:border-primary-500">
                       <SelectValue placeholder="Select a difficulty level" />
                     </SelectTrigger>
                     <SelectContent className={"bg-neutral-50"}>
@@ -299,7 +303,7 @@ const StudyPage = () => {
                 <Button
                   type="submit"
                   disabled={!topic.trim() || loading}
-                  className="w-full bg-primary-400 text-neutral-50 font-bold text-xl py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                  className="w-full bg-primary-400 text-neutral-50 font-bold text-lg sm:text-xl py-3 sm:py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
                 >
                   {loading ? (
                     <>
@@ -323,7 +327,7 @@ const StudyPage = () => {
   // Render study step (summary + flashcards)
   if (currentStep === "study") {
     return (
-      <div className="min-h-screen bg-primary-100 p-6 relative">
+      <div className="min-h-screen bg-primary-100 p-4 sm:p-6 relative">
         {/* Grid Background */}
         <div
           className="absolute inset-0 opacity-30"
@@ -336,41 +340,44 @@ const StudyPage = () => {
           }}
         />
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className=" flex flex-row  items-center justify-center text-4xl font-black text-neutral-950">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+            <h1 className=" flex flex-row  items-center justify-center text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-950">
               <BookOpen className="mr-2" size={40} /> Study: {topic}
             </h1>
             <Button
               onClick={() => setCurrentStep("input")}
-              className="bg-neutral-300 text-neutral-950 font-bold px-4 py-2"
+              className="bg-neutral-300 text-neutral-950 font-bold px-3 sm:px-4 py-2 w-full sm:w-auto"
             >
               <ArrowLeft className="mr-2" />
               Back
             </Button>
           </div>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6 lg:gap-8">
             {/* Summary Section */}
-            <div>
-              <h2 className="text-3xl font-black text-neutral-950 mb-6">
+            <div className="flex-1">
+              <h2 className="text-2xl sm:text-3xl font-black text-neutral-950 mb-4 sm:mb-6">
                 Summary
               </h2>
-              <Card className="p-6 bg-primary-100 h-fit">
+              <Card className="p-4 sm:p-6 bg-primary-100 h-fit">
                 <CardContent>
-                  <Markdown>{summary?.summary}</Markdown>
+                  <div className="prose prose-sm sm:prose-lg max-w-none">
+                    <Markdown>{summary?.summary}</Markdown>
+                  </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Flashcards Section */}
-            <div className="select-none">
-              <h2 className="text-3xl font-black text-neutral-950 mb-6">
+            <div className="flex-1 select-none">
+              <h2 className="text-2xl sm:text-3xl font-black text-neutral-950 mb-4 sm:mb-6">
                 Flashcards
               </h2>
 
               {flashcards.length > 0 && (
                 <>
                   <Carousel
+                    className="w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto"
                     opts={{
                       watchDrag: false, // Disables drag/swipe
                     }}
@@ -385,23 +392,26 @@ const StudyPage = () => {
                             }`}
                           >
                             <Card
-                              className={`p-8 mb-6 cursor-pointer transition-all duration-300 ${
+                              className={`p-4 sm:p-6 lg:p-8 mb-6 cursor-pointer transition-all duration-300 ${
                                 cardFlipStates[index]
                                   ? "bg-primary-400"
                                   : "bg-primary-200"
                               }`}
                               onClick={() => toggleCardFlip(index)}
+                              style={{
+                                minHeight: "200px",
+                              }}
                             >
-                              <div className="text-center min-h-[150px] flex items-center justify-center">
-                                <div className="text-xl font-bold text-neutral-950">
+                              <div className="text-center min-h-[120px] sm:min-h-[150px] flex items-center justify-center">
+                                <div className="text-lg sm:text-xl font-bold text-neutral-950">
                                   {cardFlipStates[index]
                                     ? flashcards[index]?.back
                                     : flashcards[index]?.front}
                                 </div>
                               </div>
 
-                              <div className="text-center mt-4">
-                                <span className="text-sm font-bold text-neutral-600">
+                              <div className="text-center mt-3 sm:mt-4">
+                                <span className="text-xs sm:text-sm font-bold text-neutral-600">
                                   Click to{" "}
                                   {cardFlipStates[index]
                                     ? "see question"
@@ -413,8 +423,8 @@ const StudyPage = () => {
                         );
                       })}
                     </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                    <CarouselPrevious className="hidden sm:flex" />
+                    <CarouselNext className="hidden sm:flex" />
                   </Carousel>
                 </>
               )}
@@ -422,12 +432,12 @@ const StudyPage = () => {
           </div>
 
           {/* Start Quiz Button */}
-          <div className="text-center mt-12">
-            <Card className="p-8 bg-primary-300">
-              <h3 className="text-2xl font-black text-neutral-950 mb-4">
+          <div className="text-center mt-8 sm:mt-12">
+            <Card className="p-4 sm:p-8 bg-primary-300">
+              <h3 className="text-xl sm:text-2xl font-black text-neutral-950 mb-3 sm:mb-4">
                 Ready to test your knowledge?
               </h3>
-              <p className="text-lg text-neutral-600 font-bold mb-6">
+              <p className="text-base sm:text-lg text-neutral-600 font-bold mb-4 sm:mb-6">
                 Take the quiz to see how much you've learned! <br />
                 <span>
                   Note: This topic will only be saved for you{" "}
@@ -439,16 +449,16 @@ const StudyPage = () => {
               </p>
 
               {/* Question Count Selector */}
-              <div className="mb-6">
-                <label className="block text-xl font-bold text-neutral-950 mb-3">
+              <div className="mb-4 sm:mb-6">
+                <label className="block text-lg sm:text-xl font-bold text-neutral-950 mb-2 sm:mb-3">
                   Number of Questions
                 </label>
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center gap-2 sm:gap-4">
                   {[5, 10, 15].map((count) => (
                     <button
                       key={count}
                       onClick={() => setQuestionCount(count)}
-                      className={`px-6 py-3 text-lg font-bold border-4 border-neutral-950 rounded-lg transition-all duration-300 ${
+                      className={`px-4 sm:px-6 py-2 sm:py-3 text-base sm:text-lg font-bold border-4 border-neutral-950 rounded-lg transition-all duration-300 ${
                         questionCount === count
                           ? "bg-primary-500 text-neutral-50 scale-105"
                           : "bg-neutral-50 text-neutral-950 hover:bg-primary-100"
@@ -462,7 +472,7 @@ const StudyPage = () => {
 
               <Button
                 onClick={startQuiz}
-                className="bg-neutral-950 text-neutral-50 font-bold text-xl px-8 py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                className="bg-neutral-950 text-neutral-50 font-bold text-lg sm:text-xl px-6 sm:px-8 py-3 sm:py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto"
               >
                 <Target className="mr-2" />
                 Start Quiz with {questionCount} Questions
@@ -479,7 +489,7 @@ const StudyPage = () => {
     const currentQuestion = quiz?.questions[currentQuestionIndex];
 
     return (
-      <div className="min-h-screen bg-primary-100 p-6 relative">
+      <div className="min-h-screen bg-primary-100 p-4 sm:p-6 relative">
         {/* Grid Background */}
         <div
           className="absolute inset-0 opacity-30"
@@ -492,31 +502,31 @@ const StudyPage = () => {
           }}
         />
         <div className="max-w-4xl mx-auto relative z-10">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl underline font-black text-neutral-950">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl underline font-black text-neutral-950">
               Quiz: {topic}
             </h1>
             <Button
               onClick={() => setCurrentStep("study")}
-              className="bg-neutral-300 text-neutral-950 font-bold px-4 py-2"
+              className="bg-neutral-300 text-neutral-950 font-bold px-3 sm:px-4 py-2 w-full sm:w-auto"
             >
               <ArrowLeft className="mr-2" />
               Back to Study
             </Button>
           </div>
 
-          <div className="text-center mb-6">
-            <span className="text-lg font-bold text-neutral-600">
+          <div className="text-center mb-4 sm:mb-6">
+            <span className="text-base sm:text-lg font-bold text-neutral-600">
               Question {currentQuestionIndex + 1} of {quiz?.questions.length}
             </span>
           </div>
 
-          <Card className="p-8 mb-8 bg-primary-100">
-            <h2 className="text-2xl font-bold text-neutral-950 mb-6">
+          <Card className="p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 bg-primary-100">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-neutral-950 mb-4 sm:mb-6">
               {currentQuestion?.question}
             </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {currentQuestion?.options.map((option, index) => {
                 const optionLetter = String.fromCharCode(65 + index); // A, B, C, D
                 const isSelected =
@@ -531,23 +541,23 @@ const StudyPage = () => {
                         [currentQuestionIndex]: optionLetter,
                       })
                     }
-                    className={`w-full p-4 text-left border-4 border-neutral-950 rounded-lg font-bold transition-all duration-300 ${
+                    className={`w-full p-3 sm:p-4 text-left border-2 sm:border-4 border-neutral-950 rounded-lg font-bold transition-all duration-300 ${
                       isSelected
                         ? "bg-primary-300 scale-105"
                         : "bg-neutral-50 hover:bg-primary-100"
                     }`}
                   >
-                    <span className="font-black text-neutral-950 mr-3">
+                    <span className="font-black text-neutral-950 mr-2 sm:mr-3">
                       {optionLetter}.
                     </span>
-                    {option}
+                    <span className="text-sm sm:text-base">{option}</span>
                   </button>
                 );
               })}
             </div>
           </Card>
 
-          <div className="flex justify-between">
+          <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
             <Button
               onClick={() => {
                 if (currentQuestionIndex > 0) {
@@ -555,20 +565,20 @@ const StudyPage = () => {
                 }
               }}
               disabled={currentQuestionIndex === 0}
-              className="bg-neutral-300 text-neutral-950 font-bold px-6 py-3"
+              className="bg-neutral-300 text-neutral-950 font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto order-2 sm:order-1"
             >
               <ArrowLeft className="mr-2" />
               Previous
             </Button>
 
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4 order-1 sm:order-2">
               {currentQuestionIndex < quiz.questions.length - 1 ? (
                 <Button
                   onClick={() =>
                     setCurrentQuestionIndex(currentQuestionIndex + 1)
                   }
                   disabled={!selectedAnswers[currentQuestionIndex]}
-                  className="bg-primary-500 text-neutral-50 font-bold px-6 py-3"
+                  className="bg-primary-500 text-neutral-50 font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto"
                 >
                   Next Question
                   <ArrowRight className="ml-2" />
@@ -577,7 +587,7 @@ const StudyPage = () => {
                 <Button
                   onClick={finishQuiz}
                   disabled={!selectedAnswers[currentQuestionIndex]}
-                  className="bg-neutral-950 text-neutral-50 font-bold px-6 py-3 hover:scale-105 transition-all duration-300"
+                  className="bg-neutral-950 text-neutral-50 font-bold px-4 sm:px-6 py-2 sm:py-3 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
                 >
                   Finish Quiz
                   <CheckCircle className="ml-2" />
@@ -593,7 +603,7 @@ const StudyPage = () => {
   // Render completion step
   if (currentStep === "complete") {
     return (
-      <div className="min-h-screen bg-primary-100 p-6 relative">
+      <div className="min-h-screen bg-primary-100 p-4 sm:p-6 relative">
         {/* Grid Background */}
         <div
           className="absolute inset-0 opacity-30"
@@ -605,50 +615,64 @@ const StudyPage = () => {
             backgroundSize: "40px 40px",
           }}
         />
+
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="mb-12">
-            <div className="text-8xl mb-6">🎉</div>
-            <h1 className="text-5xl font-black text-neutral-950 mb-4">
+          <div className="mb-8 sm:mb-12">
+            <div className="flex justify-center">
+              <Star4
+                size={70}
+                color={"oklch(0.6632 0.1926 289.64)"}
+                stroke={"black"}
+                strokeWidth={6}
+              />
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-950 mb-3 sm:mb-4">
               Congratulations!
             </h1>
-            <p className="text-xl text-neutral-600 font-bold">
+            <p className="text-lg sm:text-xl text-neutral-600 font-bold px-4">
               You've completed your study session on "{topic}"
             </p>
           </div>
 
-          <Card className="p-8 mb-8 bg-primary-200">
-            <h2 className="text-3xl font-black text-neutral-950 mb-6">
+          <Card className="p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 bg-primary-200">
+            <h2 className="text-2xl sm:text-3xl font-black text-neutral-950 mb-4 sm:mb-6">
               Your Results
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="p-6 bg-neutral-50">
-                <div className="text-4xl font-black text-primary-500 mb-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <Card className="p-4 sm:p-6 bg-neutral-50">
+                <div className="text-3xl sm:text-4xl font-black text-primary-500 mb-2">
                   {quizScore}%
                 </div>
-                <div className="font-bold text-neutral-950">Quiz Score</div>
+                <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                  Quiz Score
+                </div>
               </Card>
 
-              <Card className="p-6 bg-neutral-50">
-                <div className="text-4xl font-black text-primary-600 mb-2">
+              <Card className="p-4 sm:p-6 bg-neutral-50">
+                <div className="text-3xl sm:text-4xl font-black text-primary-600 mb-2">
                   {flashcards.length}
                 </div>
-                <div className="font-bold text-neutral-950">Cards Studied</div>
+                <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                  Cards Studied
+                </div>
               </Card>
 
-              <Card className="p-6 bg-neutral-50">
-                <div className="text-4xl font-black text-neutral-950 mb-2">
+              <Card className="p-4 sm:p-6 bg-neutral-50">
+                <div className="text-3xl sm:text-4xl font-black text-neutral-950 mb-2">
                   3
                 </div>
-                <div className="font-bold text-neutral-950">Activities</div>
+                <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                  Activities
+                </div>
               </Card>
             </div>
           </Card>
 
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Button
               onClick={resetStudy}
-              className="bg-primary-500 text-neutral-50 font-bold px-8 py-4 hover:scale-105 transition-all duration-300"
+              className="bg-primary-500 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
             >
               <RotateCcw className="mr-2" />
               Study Another Topic
@@ -656,7 +680,7 @@ const StudyPage = () => {
 
             <Button
               onClick={() => navigate("/dashboard")}
-              className="bg-neutral-950 text-neutral-50 font-bold px-8 py-4 hover:scale-105 transition-all duration-300"
+              className="bg-neutral-950 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
             >
               <Home className="mr-2" />
               Back to Dashboard

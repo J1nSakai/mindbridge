@@ -51,7 +51,7 @@ const LoginPage = () => {
   // }
 
   return (
-    <div className="min-h-screen bg-primary-100 flex items-center justify-center p-6 relative">
+    <div className="min-h-screen bg-primary-100 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
       {/* Grid Background */}
       <div
         className="absolute inset-0 opacity-30"
@@ -63,46 +63,48 @@ const LoginPage = () => {
           backgroundSize: "40px 40px",
         }}
       />
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg relative z-10">
         {/* Brand Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="bg-primary-500 p-3 rounded-lg rotate-3 border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              <span className="font-bold text-lg">MD</span>
+            <div className="bg-primary-500 p-2 sm:p-3 rounded-lg rotate-3 border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <span className="font-bold text-neutral-50 text-base sm:text-lg">
+                MD
+              </span>
             </div>
-            <h1 className="text-3xl font-extrabold text-neutral-950">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-neutral-950">
               MindBridge
             </h1>
           </div>
-          <p className="text-neutral-700 font-bold">
+          <p className="text-sm sm:text-base text-neutral-700 font-bold px-2">
             Welcome back to your{" "}
             <HighlightedText>learning adventure</HighlightedText>!
           </p>
         </div>
 
         {/* Login Card */}
-        <Card className="w-full max-w-md bg-neutral-50 border-8 border-neutral-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-          <CardHeader>
-            <CardTitle className="text-2xl font-black text-neutral-950">
-              Login to your account
+        <Card className="bg-neutral-50 border-4 border-neutral-950 ">
+          <CardHeader className="text-center pb-4 sm:pb-6">
+            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-neutral-950">
+              Login to Your Account
             </CardTitle>
-            <CardDescription className="text-neutral-600 font-bold">
-              Enter your credentials to continue your learning journey
+            <CardDescription className="text-sm sm:text-base text-neutral-700 font-bold px-2">
+              Enter your credentials to access your dashboard
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             {error && (
               <div className="mb-4 p-4 bg-red-100 border-4 border-red-500 rounded-lg">
                 <p className="text-red-700 font-bold">{error}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               <div className="space-y-2">
                 <Label
                   htmlFor="email"
-                  className="text-neutral-950 font-bold text-lg"
+                  className="text-neutral-950 font-bold text-base sm:text-lg"
                 >
                   Email
                 </Label>
@@ -114,39 +116,37 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="h-12 text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
                 />
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label
-                    htmlFor="password"
-                    className="text-neutral-950 font-bold text-lg"
-                  >
-                    Password
-                  </Label>
-                </div>
+                <Label
+                  htmlFor="password"
+                  className="text-neutral-950 font-bold text-base sm:text-lg"
+                >
+                  Password
+                </Label>
                 <Input
                   id="password"
                   name="password"
                   type="password"
+                  placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="h-12 text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
                 />
               </div>
 
-              {/* Submit button inside form */}
               <Button
                 type="submit"
                 size="lg"
                 disabled={authLoading}
-                className="w-full bg-primary-500 text-neutral-50 font-bold text-lg border-4 border-neutral-950 hover:bg-primary-600 disabled:opacity-50"
+                className="w-full bg-primary-500 text-neutral-50 font-bold text-base sm:text-lg border-4 border-neutral-950 hover:bg-primary-600 disabled:opacity-50 h-10 sm:h-12"
               >
                 {authLoading ? (
-                  <LoadingSpinnerOnly message="Logging you in..." />
+                  <LoadingSpinnerOnly message="Logging in..." />
                 ) : (
                   "Login"
                 )}
@@ -154,9 +154,9 @@ const LoginPage = () => {
             </form>
           </CardContent>
 
-          <CardFooter className="flex-col space-y-4">
-            <div className="text-center pt-4">
-              <p className="text-neutral-700 font-bold">
+          <CardFooter className="flex-col space-y-3 sm:space-y-4 px-4 sm:px-6">
+            <div className="text-center pt-2 sm:pt-4">
+              <p className="text-sm sm:text-base text-neutral-700 font-bold">
                 Don't have an account?{" "}
                 <Link
                   to="/signup"

@@ -203,35 +203,35 @@ const DashboardPage = () => {
         }}
       />
       {/* Header */}
-      <header className="bg-primary-400 border-b-8 border-neutral-950 shadow-[0px_8px_0px_0px_rgba(0,0,0,1)] relative z-10">
-        <div className="max-w-6xl mx-auto px-6 py-6">
+      <header className="bg-primary-400 border-b-4 sm:border-b-6 lg:border-b-8 border-neutral-950 shadow-[0px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[0px_6px_0px_0px_rgba(0,0,0,1)] lg:shadow-[0px_8px_0px_0px_rgba(0,0,0,1)] relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           <div className="flex justify-between items-center">
             {/* Logo/Brand */}
-            <div className="flex items-center gap-2">
-              <div className="bg-primary-500 p-2 rounded-lg rotate-3 border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:rotate-6 hover:scale-110 transition-all duration-300">
-                <span className="text-2xl font-extrabold text-neutral-50">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="bg-primary-500 p-1.5 sm:p-2 rounded-lg rotate-3 border-2 sm:border-4 border-neutral-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:rotate-6 hover:scale-110 transition-all duration-300">
+                <span className="text-lg sm:text-2xl font-extrabold text-neutral-50">
                   MB
                 </span>
               </div>
-              <h1 className="text-3xl font-extrabold text-neutral-50">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-neutral-50">
                 MindBridge
               </h1>
             </div>
 
             {/* Profile Section */}
-            <div className="flex items-center gap-4 relative">
-              <div className="text-right text-neutral-50">
-                <p className="text-lg font-bold">{user?.name || "Learner"}</p>
-                <p className="text-sm opacity-90">Level {stats.level}</p>
+            <div className="flex items-center gap-2 sm:gap-4 relative">
+              <div className="hidden sm:block text-right text-neutral-50">
+                <p className="text-sm sm:text-lg font-bold">{user?.name || "Learner"}</p>
+                <p className="text-xs sm:text-sm opacity-90">Level {stats.level}</p>
               </div>
 
               <Popover>
                 <PopoverTrigger asChild>
                   <Avatar
                     size="xl"
-                    className="cursor-pointer border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:scale-110 hover:rotate-3 transition-all duration-300"
+                    className="cursor-pointer border-2 sm:border-4 border-neutral-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:scale-110 hover:rotate-3 transition-all duration-300 w-10 h-10 sm:w-12 sm:h-12"
                   >
-                    <AvatarFallback className="text-xl">
+                    <AvatarFallback className="text-sm sm:text-xl">
                       {user?.name?.charAt(0)?.toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
@@ -288,68 +288,68 @@ const DashboardPage = () => {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-12 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
         {/* Welcome Message */}
-        <div className="mb-12 text-center">
-          <h2 className="text-5xl font-black text-neutral-950 mb-4">
+        <div className="mb-8 sm:mb-12 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-neutral-950 mb-4 px-2">
             Welcome back,{" "}
             <HighlightedText>{user?.name || "Learner"}</HighlightedText>!
           </h2>
         </div>
 
         {/* Quick Stats */}
-        <Card className="mb-12 bg-primary-200 p-8">
-          <h3 className="text-3xl font-black text-neutral-950 mb-8 text-center">
+        <Card className="mb-8 sm:mb-12 bg-primary-200 p-4 sm:p-6 lg:p-8">
+          <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-neutral-950 mb-6 sm:mb-8 text-center">
             Your{" "}
             <HighlightedText bgColor="bg-neutral-950">Progress</HighlightedText>
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <Card className="text-center p-6 hover:-rotate-3 transition-all duration-200">
-              <div className="bg-primary-500 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 rotate-3">
-                <BookOpen className="text-neutral-50 text-2xl" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:-rotate-3 transition-all duration-200">
+              <div className="bg-primary-500 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 rotate-3">
+                <BookOpen className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
               </div>
-              <div className="text-4xl font-black text-primary-500 mb-2">
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-500 mb-1 sm:mb-2">
                 {stats.studySessions}
               </div>
-              <div className="text-neutral-950 font-bold">Study Sessions</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Study Sessions</div>
             </Card>
 
-            <Card className="text-center p-6 hover:rotate-3 transition-all duration-200">
-              <div className="bg-primary-600 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 -rotate-3">
-                <TrendingUp className="text-neutral-50 text-2xl" />
+            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:rotate-3 transition-all duration-200">
+              <div className="bg-primary-600 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 -rotate-3">
+                <TrendingUp className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
               </div>
-              <div className="text-4xl font-black text-primary-600 mb-2">
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 mb-1 sm:mb-2">
                 {stats.level}
               </div>
-              <div className="text-neutral-950 font-bold">Level</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Level</div>
             </Card>
 
-            <Card className="text-center p-6 hover:-rotate-3 transition-all duration-200">
-              <div className="bg-neutral-950 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 rotate-6">
-                <Star className="text-neutral-50 text-2xl" />
+            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:-rotate-3 transition-all duration-200">
+              <div className="bg-neutral-950 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 rotate-6">
+                <Star className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
               </div>
-              <div className="text-4xl font-black text-neutral-950 mb-2">
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-950 mb-1 sm:mb-2">
                 {stats.achievements}
               </div>
-              <div className="text-neutral-950 font-bold">Achievements</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Achievements</div>
             </Card>
 
-            <Card className="text-center p-6 hover:rotate-3 transition-all duration-200">
-              <div className="bg-primary-300 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-3 -rotate-6">
-                <Trophy className="text-neutral-950 text-2xl" />
+            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:rotate-3 transition-all duration-200">
+              <div className="bg-primary-300 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 -rotate-6">
+                <Trophy className="text-neutral-950 text-lg sm:text-xl lg:text-2xl" />
               </div>
-              <div className="text-4xl font-black text-primary-600 mb-2">
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 mb-1 sm:mb-2">
                 {stats.battlesWon}
               </div>
-              <div className="text-neutral-950 font-bold">Battles Won</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Battles Won</div>
             </Card>
           </div>
         </Card>
 
         {/* Topics Section */}
-        <Card className="bg-primary-300 p-8">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-3xl font-black text-neutral-950">
+        <Card className="bg-primary-300 p-4 sm:p-6 lg:p-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-neutral-950">
               Your{" "}
               <HighlightedText bgColor="bg-neutral-950">
                 Learning Topics
@@ -358,7 +358,7 @@ const DashboardPage = () => {
             {topics.length > 0 && (
               <Button
                 onClick={handleLearnNewClick}
-                className="bg-neutral-950 text-neutral-50 font-bold text-lg px-6 py-3 hover:scale-105 hover:-translate-y-1 hover:rotate-1 transition-all duration-300"
+                className="bg-neutral-950 text-neutral-50 font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 sm:py-3 hover:scale-105 hover:-translate-y-1 hover:rotate-1 transition-all duration-300 w-full sm:w-auto"
               >
                 <Plus className="mr-2" />
                 Learn Something New
@@ -386,7 +386,7 @@ const DashboardPage = () => {
               </Button>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {topics.map((topic, index) => {
                 const colors = [
                   "bg-primary-200",
@@ -411,17 +411,17 @@ const DashboardPage = () => {
                     <Card
                       className={`${
                         colors[index % colors.length]
-                      } p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-105 ${
+                      } p-4 sm:p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-105 ${
                         rotations[index % rotations.length]
                       } hover:rotate-0`}
                     >
-                      <div className="bg-neutral-50 inline-block p-3 rounded-lg border-4 border-neutral-950 mb-4 rotate-3">
-                        <BookOpen className="text-2xl text-neutral-950" />
+                      <div className="bg-neutral-50 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-3 sm:mb-4 rotate-3">
+                        <BookOpen className="text-lg sm:text-xl lg:text-2xl text-neutral-950" />
                       </div>
-                      <h4 className="text-xl font-black text-neutral-950 mb-3">
+                      <h4 className="text-lg sm:text-xl lg:text-2xl font-black text-neutral-950 mb-2 sm:mb-3">
                         {topic.name}
                       </h4>
-                      <div className="mb-4">
+                      <div className="mb-3 sm:mb-4">
                         {/* <div className="flex justify-between text-sm font-bold text-neutral-950 mb-2">
                         <span>Progress</span>
                         <span>{topic.progress}%</span>
@@ -433,7 +433,7 @@ const DashboardPage = () => {
                         ></div>
                       </div> */}
                       </div>
-                      <div className="flex justify-between text-sm font-bold text-neutral-950">
+                      <div className="flex justify-between text-xs sm:text-sm font-bold text-neutral-950">
                         {/* <span>{topic.sessionsCount} sessions</span> */}
                         <span>{topic.lastStudied}</span>
                       </div>
