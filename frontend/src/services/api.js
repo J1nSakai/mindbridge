@@ -43,6 +43,7 @@ class ApiClient {
     try {
       const response = await fetch(url, config);
       const data = await response.json();
+      console.log(data);
 
       if (!response.ok) {
         throw new Error(data.message || data.error || "Request failed");
@@ -107,8 +108,10 @@ export const userAPI = {
     apiClient.put(`/user/profile/${userId}`, profileData),
   getAchievements: (userId) => apiClient.get(`/user/achievements/${userId}`),
   getDashboard: (userId) => apiClient.get(`/user/dashboard/${userId}`),
-  getTopicSessions: (userId, topic) =>
-    apiClient.get(`/user/topic-sessions/${userId}?topic=${encodeURIComponent(topic)}`),
+  getTopicSessions: (userId, topicId) =>
+    apiClient.get(
+      `/user/topic-sessions/${userId}?topicId=${encodeURIComponent(topicId)}`
+    ),
 };
 
 // AI API
@@ -122,8 +125,6 @@ export const aiAPI = {
   explainConcept: (concept, context = "") =>
     apiClient.post("/ai/explain", { concept, context }),
 };
-
-
 
 // Export the API client for direct use if needed
 export { apiClient };

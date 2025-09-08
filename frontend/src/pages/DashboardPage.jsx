@@ -50,11 +50,13 @@ const DashboardPage = () => {
     const topicMap = {};
 
     sessions.forEach((session) => {
-      const topicName = session.topic;
-      if (!topicMap[topicName]) {
-        topicMap[topicName] = {
-          id: encodeURIComponent(topicName.toLowerCase().replace(/\s+/g, "-")),
-          name: topicName,
+      const topicId = session.$id;
+      console.log("session", topicId);
+
+      if (!topicMap[topicId]) {
+        topicMap[topicId] = {
+          id: topicId,
+          name: session.topic,
           sessions: [],
           totalSessions: 0,
           totalScore: 0,
@@ -62,12 +64,12 @@ const DashboardPage = () => {
         };
       }
 
-      topicMap[topicName].sessions.push(session);
-      topicMap[topicName].totalSessions++;
+      topicMap[topicId].sessions.push(session);
+      topicMap[topicId].totalSessions++;
 
       if (session.score !== null && session.score !== undefined) {
-        topicMap[topicName].totalScore += session.score;
-        topicMap[topicName].scoredSessions++;
+        topicMap[topicId].totalScore += session.score;
+        topicMap[topicId].scoredSessions++;
       }
     });
 
@@ -221,8 +223,12 @@ const DashboardPage = () => {
             {/* Profile Section */}
             <div className="flex items-center gap-2 sm:gap-4 relative">
               <div className="hidden sm:block text-right text-neutral-50">
-                <p className="text-sm sm:text-lg font-bold">{user?.name || "Learner"}</p>
-                <p className="text-xs sm:text-sm opacity-90">Level {stats.level}</p>
+                <p className="text-sm sm:text-lg font-bold">
+                  {user?.name || "Learner"}
+                </p>
+                <p className="text-xs sm:text-sm opacity-90">
+                  Level {stats.level}
+                </p>
               </div>
 
               <Popover>
@@ -311,7 +317,9 @@ const DashboardPage = () => {
               <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-500 mb-1 sm:mb-2">
                 {stats.studySessions}
               </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Study Sessions</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
+                Study Sessions
+              </div>
             </Card>
 
             <Card className="text-center p-3 sm:p-4 lg:p-6 hover:rotate-3 transition-all duration-200">
@@ -321,7 +329,9 @@ const DashboardPage = () => {
               <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 mb-1 sm:mb-2">
                 {stats.level}
               </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Level</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
+                Level
+              </div>
             </Card>
 
             <Card className="text-center p-3 sm:p-4 lg:p-6 hover:-rotate-3 transition-all duration-200">
@@ -331,7 +341,9 @@ const DashboardPage = () => {
               <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-950 mb-1 sm:mb-2">
                 {stats.achievements}
               </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Achievements</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
+                Achievements
+              </div>
             </Card>
 
             <Card className="text-center p-3 sm:p-4 lg:p-6 hover:rotate-3 transition-all duration-200">
@@ -341,7 +353,9 @@ const DashboardPage = () => {
               <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 mb-1 sm:mb-2">
                 {stats.battlesWon}
               </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">Battles Won</div>
+              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
+                Battles Won
+              </div>
             </Card>
           </div>
         </Card>

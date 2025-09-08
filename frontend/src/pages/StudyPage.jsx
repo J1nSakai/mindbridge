@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { aiAPI, userAPI } from "../services/api";
 import { Button } from "../components/ui/button";
@@ -64,6 +64,27 @@ const StudyPage = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizScore, setQuizScore] = useState(0);
+
+  const [emblaApi, setEmblaApi] = useState();
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const onSelect = () => {
+      const currIndex = emblaApi.selectedScrollSnap();
+
+      // Optional: detect swipe direction
+      console.log("Current slide:", currIndex);
+    };
+
+    // Add the event listener
+    emblaApi.on("select", onSelect);
+
+    // Cleanup function
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
 
   const handleTopicSubmit = async (e) => {
     e.preventDefault();
@@ -246,6 +267,17 @@ const StudyPage = () => {
           }}
         />
         <div className="max-w-4xl mx-auto relative z-10">
+          {/* Back Button */}
+          <div className="mb-6 sm:mb-8">
+            <Button
+              onClick={() => navigate("/dashboard")}
+              className="mb-4 bg-primary-400 px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto"
+            >
+              <ArrowLeft className="mr-2 w-4 h-4" />
+              Back to Dashboard
+            </Button>
+          </div>
+
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-950 mb-3 sm:mb-4">
               What do you want to{" "}
@@ -345,7 +377,10 @@ const StudyPage = () => {
               <BookOpen className="mr-2" size={40} /> Study: {topic}
             </h1>
             <Button
-              onClick={() => setCurrentStep("input")}
+              onClick={() => {
+                setCurrentStep("input");
+                resetStudy();
+              }}
               className="bg-neutral-300 text-neutral-950 font-bold px-3 sm:px-4 py-2 w-full sm:w-auto"
             >
               <ArrowLeft className="mr-2" />
@@ -378,9 +413,7 @@ const StudyPage = () => {
                 <>
                   <Carousel
                     className="w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto"
-                    opts={{
-                      watchDrag: false, // Disables drag/swipe
-                    }}
+                    setApi={setEmblaApi}
                   >
                     <CarouselContent>
                       {flashcards.map((flashcard, index) => {
@@ -423,8 +456,10 @@ const StudyPage = () => {
                         );
                       })}
                     </CarouselContent>
-                    <CarouselPrevious className="hidden sm:flex" />
-                    <CarouselNext className="hidden sm:flex" />
+                    <div className="hidden sm:flex">
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </div>
                   </Carousel>
                 </>
               )}

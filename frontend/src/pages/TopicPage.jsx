@@ -1,19 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
-import { useAuth } from "../contexts/AuthContext";
-import { userAPI } from "../services/api";
-import { Button } from "../components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
-import {
-  ArrowLeft,
-  BookOpen,
-  Brain,
-  Target,
-  XCircle,
-  RotateCcw,
-} from "lucide-react";
-import Markdown from "react-markdown";
 import {
   Carousel,
   CarouselContent,
@@ -21,6 +6,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, RotateCcw, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
+import { useNavigate, useParams } from "react-router";
+import { Button } from "../components/ui/button";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { useAuth } from "../contexts/AuthContext";
+import { userAPI } from "../services/api";
 
 const TopicPage = () => {
   const { topicId } = useParams();
@@ -29,17 +23,50 @@ const TopicPage = () => {
 
   const [loading, setLoading] = useState(true);
   const [topicData, setTopicData] = useState(null);
-  const [currentView, setCurrentView] = useState("summary"); // summary, flashcards, quiz
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [cardFlipStates, setCardFlipStates] = useState({});
   const [flipped, setFlipped] = useState(false);
 
   const [hasCompletedQuiz, setHasCompletedQuiz] = useState(false);
   const [savedQuizResults, setSavedQuizResults] = useState(null);
+  const [activeTab, setActiveTab] = useState("summary");
+
+  const [emblaApi, setEmblaApi] = useState(null);
 
   useEffect(() => {
     fetchTopicData();
   }, [topicId, userId]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const onSelect = () => {
+      const currIndex = emblaApi.selectedScrollSnap();
+      setCurrentCardIndex(currIndex); // Sync with carousel position
+
+      // Optional: detect swipe direction
+      console.log("Current slide:", currIndex);
+    };
+
+    // Add the event listener
+    emblaApi.on("select", onSelect);
+
+    // Set initial index
+    setCurrentCardIndex(emblaApi.selectedScrollSnap());
+
+    // Cleanup function
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
+
+  // Reset card flip states and index when switching to flashcards tab
+  useEffect(() => {
+    if (activeTab === "flashcards") {
+      setCardFlipStates({});
+      setCurrentCardIndex(0);
+    }
+  }, [activeTab]);
 
   const fetchTopicData = async () => {
     try {
@@ -47,10 +74,8 @@ const TopicPage = () => {
       console.log(`🔍 Fetching data for topic: ${topicId}`);
 
       // Convert topic ID back to topic name (reverse the slug conversion and URL encoding)
-      const decodedTopicId = decodeURIComponent(topicId);
-      const topicName = decodedTopicId.replace(/-/g, " ");
 
-      const response = await userAPI.getTopicSessions(userId, topicName);
+      const response = await userAPI.getTopicSessions(userId, topicId);
       console.log("📊 Topic data received:", response);
 
       // Handle the API response format { success: true, data: sessions.rows }
@@ -192,103 +217,65 @@ const TopicPage = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 px-2 sm:px-0">
-          <Button
-            onClick={() => {
-              setCurrentView("summary");
-              setCurrentCardIndex(0);
-            }}
-            className={`font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base ${
-              currentView === "summary"
-                ? "bg-neutral-950 text-neutral-50"
-                : "bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
-            }`}
-          >
-            <BookOpen className="mr-2 w-4 h-4" />
-            Summary
-          </Button>
-
-          <Button
-            onClick={() => {
-              setCurrentView("flashcards");
-              setCurrentCardIndex(0);
-            }}
-            className={`font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base ${
-              currentView === "flashcards"
-                ? "bg-neutral-950 text-neutral-50"
-                : "bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
-            }`}
-          >
-            <Brain className="mr-2 w-4 h-4" />
-            Flashcards
-          </Button>
-
-          <Button
-            onClick={() => {
-              setCurrentView("quiz");
-              setCurrentCardIndex(0);
-            }}
-            className={`font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base ${
-              currentView === "quiz"
-                ? "bg-neutral-950 text-neutral-50"
-                : "bg-neutral-200 text-neutral-950 hover:bg-neutral-300"
-            }`}
-          >
-            <Target className="mr-2 w-4 h-4" />
-            Quiz
-          </Button>
-        </div>
-
-        {/* Content Area */}
-        {currentView === "summary" && (
-          <Card className="p-4 sm:p-6 lg:p-8 mx-2 sm:mx-0">
-            <h2 className="text-xl sm:text-2xl font-black text-neutral-950 mb-4 sm:mb-6">
-              Study Summary
-            </h2>
-            <div className="prose prose-sm sm:prose-lg max-w-none">
-              <Markdown>{topicData.generatedSummary}</Markdown>
-            </div>
-          </Card>
-        )}
-
-        {currentView === "flashcards" && topicData.flashCards && (
-          <div className="space-y-4 sm:space-y-6 mx-2 sm:mx-0">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl sm:text-2xl font-black text-neutral-950">
-                Flashcards ({currentCardIndex + 1} of{" "}
-                {JSON.parse(topicData.flashCards).length})
+        {/* <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 px-2 sm:px-0 align-middle"> */}
+        <Tabs
+          defaultValue="summary"
+          onValueChange={setActiveTab}
+          className={""}
+        >
+          <TabsList className="">
+            <TabsTrigger value="summary">Summary</TabsTrigger>
+            <TabsTrigger value="flashcards">Flashcards</TabsTrigger>
+            <TabsTrigger value="quiz">Quiz</TabsTrigger>
+          </TabsList>
+          <TabsContent value="summary">
+            <Card className="p-4 sm:p-6 lg:p-8 mx-2 sm:mx-0">
+              <h2 className="text-xl sm:text-2xl font-black text-neutral-950 mb-4 sm:mb-6">
+                Study Summary
               </h2>
-            </div>
-            <Carousel
-              opts={{
-                watchDrag: false, // Disables drag/swipe
-              }}
-              className={"w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto"}
-            >
-              <CarouselContent>
-                {Array.from({
-                  length: JSON.parse(topicData.flashCards).length,
-                }).map((_, index) => {
-                  return (
-                    <CarouselItem
-                      key={index}
-                      className={`select-none ${
-                        flipped ? "animate-flip-horizontal-bottom" : ""
-                      }`}
-                    >
-                      <Card
-                        className={`h-80 sm:h-96 cursor-pointer `}
-                        onClick={() => toggleCardFlip(currentCardIndex)}
+              <div className="prose prose-sm sm:prose-lg max-w-none">
+                <Markdown>{topicData.generatedSummary}</Markdown>
+              </div>
+            </Card>
+          </TabsContent>
+          <TabsContent value="flashcards">
+            <div className="space-y-4 sm:space-y-6 mx-2 sm:mx-0">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl sm:text-2xl font-black text-neutral-950">
+                  Flashcards ({currentCardIndex + 1} of{" "}
+                  {JSON.parse(topicData.flashCards).length})
+                </h2>
+              </div>
+              <Carousel
+                // opts={{
+                //   watchDrag: false, // Disables drag/swipe
+                // }}
+                setApi={setEmblaApi}
+                className={"w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto"}
+              >
+                <CarouselContent>
+                  {Array.from({
+                    length: JSON.parse(topicData.flashCards).length,
+                  }).map((_, index) => {
+                    return (
+                      <CarouselItem
+                        key={index}
+                        className={`select-none ${
+                          flipped ? "animate-flip-horizontal-bottom" : ""
+                        }`}
                       >
-                        <CardContent className="h-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
-                          <div className="text-center">
-                            {!cardFlipStates[currentCardIndex] ? (
-                              <>
-                                <h3 className="text-lg sm:text-xl text-neutral-950 mb-3 sm:mb-4">
-                                  Question
-                                </h3>
-                                <p className="text-base sm:text-lg font-bold text-neutral-700">
-                                  {
+                        <Card
+                          className={`h-80 sm:h-96 cursor-pointer `}
+                          onClick={() => toggleCardFlip(currentCardIndex)}
+                        >
+                          <CardContent className="h-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
+                            <div className="text-center">
+                              {!cardFlipStates[currentCardIndex] ? (
+                                <>
+                                  <h3 className="text-lg sm:text-xl text-neutral-950 mb-3 sm:mb-4">
+                                    Question
+                                  </h3>
+                                  <p className="text-base sm:text-lg font-bold text-neutral-700">
                                     <Markdown>
                                       {
                                         JSON.parse(topicData.flashCards)[
@@ -296,112 +283,128 @@ const TopicPage = () => {
                                         ]?.front
                                       }
                                     </Markdown>
-                                  }
-                                </p>
-                              </>
-                            ) : (
-                              <>
-                                <h3 className="text-lg sm:text-xl text-neutral-950 mb-3 sm:mb-4">
-                                  Answer
-                                </h3>
-                                <div className="text-base sm:text-lg font-bold text-neutral-700">
-                                  <Markdown>
-                                    {
-                                      JSON.parse(topicData.flashCards)[
-                                        currentCardIndex
-                                      ]?.back
-                                    }
-                                  </Markdown>
-                                </div>
-                              </>
-                            )}
-                            <p className="text-xs sm:text-sm text-neutral-500 mt-4 sm:mt-6">
-                              Click to flip
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
-              <button
-                onClick={() =>
-                  setCurrentCardIndex(Math.max(0, currentCardIndex - 1))
-                }
-              >
-                <CarouselPrevious size="sm" />
-              </button>
-              <button
-                onClick={() =>
-                  setCurrentCardIndex(
-                    Math.min(
-                      topicData.flashCards.length - 1,
-                      currentCardIndex + 1
+                                  </p>
+                                </>
+                              ) : (
+                                <>
+                                  <h3 className="text-lg sm:text-xl text-neutral-950 mb-3 sm:mb-4">
+                                    Answer
+                                  </h3>
+                                  <div className="text-base sm:text-lg font-bold text-neutral-700">
+                                    <Markdown>
+                                      {
+                                        JSON.parse(topicData.flashCards)[
+                                          currentCardIndex
+                                        ]?.back
+                                      }
+                                    </Markdown>
+                                  </div>
+                                </>
+                              )}
+                              <p className="text-xs sm:text-sm text-neutral-500 mt-4 sm:mt-6">
+                                Click to flip
+                              </p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+                <button
+                  onClick={() =>
+                    setCurrentCardIndex(Math.max(0, currentCardIndex - 1))
+                  }
+                  disabled={currentCardIndex === 0}
+                  className={`${
+                    currentCardIndex === 0
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  } hidden sm:flex`}
+                >
+                  <CarouselPrevious size="sm" />
+                </button>
+                <button
+                  onClick={() =>
+                    setCurrentCardIndex(
+                      Math.min(
+                        JSON.parse(topicData.flashCards).length - 1,
+                        currentCardIndex + 1
+                      )
                     )
-                  )
-                }
-              >
-                <CarouselNext />
-              </button>
-            </Carousel>
-          </div>
-        )}
-
-        {currentView === "quiz" && topicData.quizData && (
-          <div className="space-y-4 sm:space-y-6 mx-2 sm:mx-0">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl sm:text-2xl font-black text-neutral-950">
-                Quiz Results
-              </h2>
+                  }
+                  disabled={
+                    currentCardIndex ===
+                    JSON.parse(topicData.flashCards).length - 1
+                  }
+                  className={`${
+                    currentCardIndex ===
+                    JSON.parse(topicData.flashCards).length - 1
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  } hidden sm:flex`}
+                >
+                  <CarouselNext />
+                </button>
+              </Carousel>
             </div>
-
-            <Card className="p-4 sm:p-6 lg:p-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <Card className="p-4 sm:p-6 bg-primary-100">
-                  <div className="text-2xl sm:text-3xl font-black text-primary-600 mb-2">
-                    {calculateQuizResults().score}%
-                  </div>
-                  <div className="font-bold text-neutral-950 text-sm sm:text-base">
-                    Score
-                  </div>
-                </Card>
-
-                <Card className="p-4 sm:p-6 bg-neutral-100">
-                  <div className="text-2xl sm:text-3xl font-black text-neutral-950 mb-2">
-                    {calculateQuizResults().correctAnswers}/
-                    {calculateQuizResults().totalQuestions ||
-                      JSON.parse(topicData.quizData).length}
-                  </div>
-                  <div className="font-bold text-neutral-950 text-sm sm:text-base">
-                    Correct Answers
-                  </div>
-                </Card>
+          </TabsContent>
+          <TabsContent value="quiz">
+            <div className="space-y-4 sm:space-y-6 mx-2 sm:mx-0">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl sm:text-2xl font-black text-neutral-950">
+                  Quiz Results
+                </h2>
               </div>
 
-              <Card className="p-4 sm:p-6 bg-neutral-50">
-                <div className="text-center">
-                  <h3 className="text-base sm:text-lg font-bold text-neutral-950 mb-2">
-                    Quiz Completed During Topic Creation
-                  </h3>
-                  <p className="text-neutral-600 mb-4 text-sm sm:text-base">
-                    This quiz was completed when you first created this topic.
-                    Your performance is shown above.
-                  </p>
-                  <Button
-                    onClick={() => navigate("/study")}
-                    className="bg-primary-500 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base"
-                  >
-                    <RotateCcw className="mr-2 w-4 h-4" />
-                    Retake Quiz
-                  </Button>
+              <Card className="p-4 sm:p-6 lg:p-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                  <Card className="p-4 sm:p-6 bg-primary-100">
+                    <div className="text-2xl sm:text-3xl font-black text-primary-600 mb-2">
+                      {calculateQuizResults().score}%
+                    </div>
+                    <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                      Score
+                    </div>
+                  </Card>
+
+                  <Card className="p-4 sm:p-6 bg-neutral-100">
+                    <div className="text-2xl sm:text-3xl font-black text-neutral-950 mb-2">
+                      {calculateQuizResults().correctAnswers}/
+                      {calculateQuizResults().totalQuestions ||
+                        JSON.parse(topicData.quizData).length}
+                    </div>
+                    <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                      Correct Answers
+                    </div>
+                  </Card>
                 </div>
+
+                <Card className="p-4 sm:p-6 bg-neutral-50">
+                  <div className="text-center">
+                    <h3 className="text-base sm:text-lg font-bold text-neutral-950 mb-2">
+                      Quiz Completed During Topic Creation
+                    </h3>
+                    <p className="text-neutral-600 mb-4 text-sm sm:text-base">
+                      This quiz was completed when you first created this topic.
+                      Your performance is shown above.
+                    </p>
+                    <Button
+                      onClick={() => navigate("/retake-quiz")}
+                      className="bg-primary-500 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base"
+                    >
+                      <RotateCcw className="mr-2 w-4 h-4" />
+                      Retake Quiz
+                    </Button>
+                  </div>
+                </Card>
               </Card>
-            </Card>
-          </div>
-        )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
+    // </div>
   );
 };
 

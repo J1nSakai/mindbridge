@@ -552,16 +552,16 @@ function generateStudyRecommendations(sessions) {
 export const getTopicSessions = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { topic } = req.query;
+    const { topicId } = req.query;
 
-    if (!topic) {
+    if (!topicId) {
       return res.status(400).json({
         success: false,
         message: "Topic parameter is required",
       });
     }
 
-    console.log(`🔍 Fetching sessions for user ${userId}, topic: ${topic}`);
+    console.log(`🔍 Fetching sessions for user ${userId}, topic: ${topicId}`);
 
     // Get all sessions for this user and topic
     const sessions = await tablesDB.listRows({
@@ -569,14 +569,14 @@ export const getTopicSessions = async (req, res) => {
       tableId: STUDY_SESSIONS_COLLECTION_ID,
       queries: [
         Query.equal("userId", userId),
-        Query.equal("topic", topic),
+        Query.equal("$id", topicId),
         Query.orderDesc("$createdAt"),
         Query.limit(50),
       ],
     });
 
     console.log(
-      `📊 Found ${sessions.rows?.length || 0} sessions for topic: ${topic}`
+      `📊 Found ${sessions.rows?.length || 0} sessions for topic: ${topicId}`
     );
 
     if (!sessions.rows || sessions.rows.length === 0) {
@@ -590,7 +590,7 @@ export const getTopicSessions = async (req, res) => {
     res.status(200).json({
       success: true,
       data: sessions.rows,
-      message: `Found ${sessions.rows.length} sessions for topic: ${topic}`,
+      message: `Found ${sessions.rows.length} sessions for topic: ${topicId}`,
     });
   } catch (error) {
     console.error("❌ Error fetching topic sessions:", error);

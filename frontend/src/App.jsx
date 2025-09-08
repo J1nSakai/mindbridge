@@ -9,6 +9,7 @@ import StudyPage from "./pages/StudyPage";
 import TopicPage from "./pages/TopicPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
+import RetakeQuizPage from "./pages/RetakeQuizPage";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -68,6 +69,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <StudyPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/retake-quiz"
+        element={
+          <ProtectedRoute>
+            <RetakeQuizPage />
           </ProtectedRoute>
         }
       />
