@@ -9,7 +9,7 @@ import {
   validateLogin,
   validateSignup,
   verifyToken,
-} from "../middleware/auth.js";
+} from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 

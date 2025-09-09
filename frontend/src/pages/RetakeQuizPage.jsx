@@ -1,7 +1,9 @@
 import Star4 from "@/components/stars/s4";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import LoadingSpinner, {
+  LoadingSpinnerOnly,
+} from "@/components/ui/LoadingSpinner";
 import { userAPI } from "@/services/api";
 import {
   ArrowLeft,
@@ -22,6 +24,7 @@ const RetakeQuizPage = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizScore, setQuizScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [finishQuizLoading, setFinishQuizLoading] = useState(false);
 
   const [topicName, setTopicName] = useState(null);
 
@@ -50,6 +53,7 @@ const RetakeQuizPage = () => {
   }
 
   const finishQuiz = async () => {
+    setFinishQuizLoading(true);
     console.log(selectedAnswers);
 
     // Calculate quiz results
@@ -74,6 +78,7 @@ const RetakeQuizPage = () => {
 
     setCorrectAnswers(correctAnswers);
     setCurrentStep("result");
+    setFinishQuizLoading(false);
   };
 
   if (currentStep === "quiz") {
@@ -169,12 +174,22 @@ const RetakeQuizPage = () => {
                 </Button>
               ) : (
                 <Button
-                  disabled={!selectedAnswers[currentQuestionIndex]}
+                  disabled={
+                    !selectedAnswers[currentQuestionIndex] || finishQuizLoading
+                  }
                   onClick={finishQuiz}
                   className="bg-neutral-950 text-neutral-50 font-bold px-4 sm:px-6 py-2 sm:py-3 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
                 >
-                  Finish Quiz
-                  <CheckCircle className="ml-2" />
+                  {finishQuizLoading ? (
+                    <span>
+                      <LoadingSpinnerOnly message={"Finishing Quiz"} />
+                    </span>
+                  ) : (
+                    <span className="flex flex-row items-center justify-center">
+                      Finish Quiz
+                      <CheckCircle className="ml-2" />
+                    </span>
+                  )}
                 </Button>
               )}
             </div>
@@ -244,7 +259,7 @@ const RetakeQuizPage = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Button
               onClick={() => navigate("/dashboard")}
-              className="bg-neutral-950 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+              className="bg-neutral-950 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto"
             >
               <Home className="mr-2" />
               Back to Dashboard

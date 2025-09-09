@@ -20,7 +20,7 @@ export const signupUser = async (req, res) => {
 
     // Create user in Appwrite Authentication using Users service
     const userId = ID.unique();
-    // const user = await users.create(userId, email, undefined, password, name);
+
     const user = await users.create({
       userId: userId,
       email: email,
@@ -44,9 +44,6 @@ export const signupUser = async (req, res) => {
             notifications: true,
             difficulty: "intermediate",
           }),
-          totalStudyTime: 0,
-          streak: 0,
-          lastActiveDate: new Date().toISOString(),
         },
       });
       console.log("✅ User profile created in database:", userProfile.$id);
@@ -54,9 +51,6 @@ export const signupUser = async (req, res) => {
       console.error("❌ Failed to create user profile:", dbError);
       // Continue without failing - user auth was successful
     }
-
-    // Game character creation removed - game functionality disabled
-
     // Generate JWT token
     const token = jwt.sign(
       {
@@ -106,7 +100,7 @@ export const loginUser = async (req, res) => {
     const { email } = req.body;
 
     // Get user by email using Users service
-    // const userList = await users.list([`email=${email}`]);
+
     const userList = await users.list({
       queries: [Query.equal("email", [email])],
     });

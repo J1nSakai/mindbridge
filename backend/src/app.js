@@ -11,9 +11,6 @@ import aiRoutes from "./routes/ai.js";
 
 import userRoutes from "./routes/user.js";
 
-// // Load environment variables
-// dotenv.config();
-
 const app = express();
 
 // Security middleware

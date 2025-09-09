@@ -46,6 +46,8 @@ const StudyPage = () => {
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("intermediate");
   const [loading, setLoading] = useState(false);
+  const [startQuizLoading, setStartQuizLoading] = useState(false);
+  const [finishQuizLoading, setFinishQuizLoading] = useState(false);
   const [questionCount, setQuestionCount] = useState(5); // New state for question count
 
   // Session data states to store information from each step
@@ -176,6 +178,7 @@ const StudyPage = () => {
   };
 
   const startQuiz = async () => {
+    setStartQuizLoading(true);
     // Store summary and flashcards session data in state instead of recording immediately
     const summarySessionData = collectSessionData("summary", { duration: 5 });
     const flashcardsSessionData = collectSessionData("flashcards", {
@@ -195,9 +198,11 @@ const StudyPage = () => {
     );
     setQuiz(quizResponse);
     setCurrentStep("quiz");
+    setStartQuizLoading(false);
   };
 
   const finishQuiz = async () => {
+    setFinishQuizLoading(true);
     console.log(selectedAnswers);
 
     // Calculate quiz results
@@ -225,6 +230,7 @@ const StudyPage = () => {
     );
     setCorrectAnswers(correctAnswers);
     setCurrentStep("complete");
+    setFinishQuizLoading(false);
   };
 
   const resetStudy = () => {
@@ -338,7 +344,7 @@ const StudyPage = () => {
                 <Button
                   type="submit"
                   disabled={!topic.trim() || loading}
-                  className="w-full bg-primary-400 text-neutral-50 font-bold text-lg sm:text-xl py-3 sm:py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                  className="w-full bg-primary-400 text-neutral-50 font-bold text-lg sm:text-xl py-3 sm:py-4"
                 >
                   {loading ? (
                     <>
@@ -514,10 +520,19 @@ const StudyPage = () => {
 
               <Button
                 onClick={startQuiz}
-                className="bg-neutral-950 text-neutral-50 font-bold text-lg sm:text-xl px-6 sm:px-8 py-3 sm:py-4 hover:scale-105 hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto"
+                disabled={startQuizLoading}
+                className="bg-primary-400 text-neutral-50 font-bold text-lg sm:text-xl px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto"
               >
-                <Target className="mr-2" />
-                Start Quiz with {questionCount} Questions
+                {startQuizLoading ? (
+                  <span>
+                    <LoadingSpinnerOnly message={"Starting"} />
+                  </span>
+                ) : (
+                  <span className="flex flex-row items-center justify-center">
+                    <Target className="mr-2" />
+                    Start Quiz with {questionCount} Questions
+                  </span>
+                )}
               </Button>
             </Card>
           </div>
@@ -585,8 +600,8 @@ const StudyPage = () => {
                     }
                     className={`w-full p-3 sm:p-4 text-left border-2 sm:border-4 border-neutral-950 rounded-lg font-bold transition-all duration-300 ${
                       isSelected
-                        ? "bg-primary-300 scale-105"
-                        : "bg-neutral-50 hover:bg-primary-100"
+                        ? "bg-primary-500 text-neutral-50"
+                        : "bg-neutral-100"
                     }`}
                   >
                     <span className="text-sm sm:text-base">{option}</span>
@@ -625,11 +640,21 @@ const StudyPage = () => {
               ) : (
                 <Button
                   onClick={finishQuiz}
-                  disabled={!selectedAnswers[currentQuestionIndex]}
-                  className="bg-neutral-950 text-neutral-50 font-bold px-4 sm:px-6 py-2 sm:py-3 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+                  disabled={
+                    !selectedAnswers[currentQuestionIndex] || finishQuizLoading
+                  }
+                  className="bg-neutral-950 text-neutral-50 font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto"
                 >
-                  Finish Quiz
-                  <CheckCircle className="ml-2" />
+                  {finishQuizLoading ? (
+                    <span>
+                      <LoadingSpinnerOnly message={"Finishing Quiz"} />
+                    </span>
+                  ) : (
+                    <span className="flex flex-row items-center justify-center">
+                      Finish Quiz
+                      <CheckCircle className="ml-2" />
+                    </span>
+                  )}
                 </Button>
               )}
             </div>
@@ -701,7 +726,7 @@ const StudyPage = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Button
               onClick={resetStudy}
-              className="bg-primary-500 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+              className="bg-primary-500 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto"
             >
               <RotateCcw className="mr-2" />
               Study Another Topic
@@ -709,7 +734,7 @@ const StudyPage = () => {
 
             <Button
               onClick={() => navigate("/dashboard")}
-              className="bg-neutral-950 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+              className="bg-neutral-950 text-neutral-50 font-bold px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto"
             >
               <Home className="mr-2" />
               Back to Dashboard

@@ -99,14 +99,14 @@ export const authAPI = {
 
 // User API
 export const userAPI = {
-  getProgress: (userId, timeframe = "week") =>
-    apiClient.get(`/user/progress/${userId}?timeframe=${timeframe}`),
+  // getProgress: (userId, timeframe = "week") =>
+  //   apiClient.get(`/user/progress/${userId}?timeframe=${timeframe}`),
   recordStudySession: (sessionData) =>
     apiClient.post("/user/study-session", sessionData),
-  getProfile: (userId) => apiClient.get(`/user/profile/${userId}`),
-  updateProfile: (userId, profileData) =>
-    apiClient.put(`/user/profile/${userId}`, profileData),
-  getAchievements: (userId) => apiClient.get(`/user/achievements/${userId}`),
+  // getProfile: (userId) => apiClient.get(`/user/profile/${userId}`),
+  // updateProfile: (userId, profileData) =>
+  //   apiClient.put(`/user/profile/${userId}`, profileData),
+  // getAchievements: (userId) => apiClient.get(`/user/achievements/${userId}`),
   getDashboard: (userId) => apiClient.get(`/user/dashboard/${userId}`),
   getTopicSessions: (userId, topicId) =>
     apiClient.get(
