@@ -8,6 +8,7 @@ import {
   recordNewStudySession,
   testAPIConnection,
   updateUserProfileAndPreferences,
+  updateTopicQuizData,
 } from "../controllers/user.controller.js";
 import { checkResourceOwnership, verifyToken } from "../middleware/auth.js";
 import {
@@ -86,6 +87,16 @@ router.get(
   verifyToken,
   checkResourceOwnership(),
   getTopicSessions
+);
+
+// @route   PUT /api/user/topic-quiz/:userId/:topicId
+// @desc    Update user quiz data for a topic
+// @access  Private
+router.put(
+  "/topic-quiz/:userId/:topicId",
+  verifyToken,
+  checkResourceOwnership(),
+  updateTopicQuizData
 );
 
 export default router;

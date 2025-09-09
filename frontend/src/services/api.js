@@ -112,6 +112,8 @@ export const userAPI = {
     apiClient.get(
       `/user/topic-sessions/${userId}?topicId=${encodeURIComponent(topicId)}`
     ),
+  updateTopicQuizData: (userId, topicId, quizCompletionData) =>
+    apiClient.put(`/user/topic-quiz/${userId}/${topicId}`, quizCompletionData),
 };
 
 // AI API

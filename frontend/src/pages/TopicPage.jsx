@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, RotateCcw, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github.css";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "../components/ui/button";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
@@ -233,8 +235,10 @@ const TopicPage = () => {
               <h2 className="text-xl sm:text-2xl font-black text-neutral-950 mb-4 sm:mb-6">
                 Study Summary
               </h2>
-              <div className="prose prose-sm sm:prose-lg max-w-none">
-                <Markdown>{topicData.generatedSummary}</Markdown>
+              <div className="max-w-none">
+                <Markdown rehypePlugins={[rehypeHighlight]}>
+                  {topicData.generatedSummary}
+                </Markdown>
               </div>
             </Card>
           </TabsContent>
@@ -276,7 +280,7 @@ const TopicPage = () => {
                                     Question
                                   </h3>
                                   <p className="text-base sm:text-lg font-bold text-neutral-700">
-                                    <Markdown>
+                                    <Markdown rehypePlugins={[rehypeHighlight]}>
                                       {
                                         JSON.parse(topicData.flashCards)[
                                           currentCardIndex
@@ -291,7 +295,7 @@ const TopicPage = () => {
                                     Answer
                                   </h3>
                                   <div className="text-base sm:text-lg font-bold text-neutral-700">
-                                    <Markdown>
+                                    <Markdown rehypePlugins={[rehypeHighlight]}>
                                       {
                                         JSON.parse(topicData.flashCards)[
                                           currentCardIndex
@@ -390,7 +394,9 @@ const TopicPage = () => {
                       Your performance is shown above.
                     </p>
                     <Button
-                      onClick={() => navigate("/retake-quiz")}
+                      onClick={() =>
+                        navigate(`/retake-quiz/${userId}/topic/${topicId}`)
+                      }
                       className="bg-primary-500 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 w-full sm:w-auto text-sm sm:text-base"
                     >
                       <RotateCcw className="mr-2 w-4 h-4" />

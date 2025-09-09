@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { aiAPI, userAPI } from "../services/api";
-import { Button } from "../components/ui/button";
-import {
-  Brain,
-  Target,
-  ArrowRight,
-  ArrowLeft,
-  CheckCircle,
-  RotateCcw,
-  Home,
-  BookOpen,
-} from "lucide-react";
-import { useNavigate } from "react-router";
-import Markdown from "react-markdown";
+import Star4 from "@/components/stars/s4";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import HighlightedText from "@/components/ui/HighlightedText";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { LoadingSpinnerOnly } from "@/components/ui/LoadingSpinner";
 import {
   Select,
   SelectContent,
@@ -24,17 +19,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { LoadingSpinnerOnly } from "@/components/ui/LoadingSpinner";
-import HighlightedText from "@/components/ui/HighlightedText";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import Star4 from "@/components/stars/s4";
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  CheckCircle,
+  Home,
+  RotateCcw,
+  Target,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github.css";
+import { useNavigate } from "react-router";
+import { Button } from "../components/ui/button";
+import { useAuth } from "../contexts/AuthContext";
+import { aiAPI, userAPI } from "../services/api";
 
 const StudyPage = () => {
   const { userId } = useAuth();
@@ -65,6 +66,7 @@ const StudyPage = () => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizScore, setQuizScore] = useState(0);
 
+  // Carousel state
   const [emblaApi, setEmblaApi] = useState();
 
   useEffect(() => {
@@ -397,7 +399,9 @@ const StudyPage = () => {
               <Card className="p-4 sm:p-6 bg-primary-100 h-fit">
                 <CardContent>
                   <div className="prose prose-sm sm:prose-lg max-w-none">
-                    <Markdown>{summary?.summary}</Markdown>
+                    <Markdown rehypePlugins={[rehypeHighlight]}>
+                      {summary?.summary}
+                    </Markdown>
                   </div>
                 </CardContent>
               </Card>
@@ -416,7 +420,7 @@ const StudyPage = () => {
                     setApi={setEmblaApi}
                   >
                     <CarouselContent>
-                      {flashcards.map((flashcard, index) => {
+                      {flashcards.map((_, index) => {
                         return (
                           <CarouselItem
                             key={index}
@@ -437,9 +441,11 @@ const StudyPage = () => {
                             >
                               <div className="text-center min-h-[120px] sm:min-h-[150px] flex items-center justify-center">
                                 <div className="text-lg sm:text-xl font-bold text-neutral-950">
-                                  {cardFlipStates[index]
-                                    ? flashcards[index]?.back
-                                    : flashcards[index]?.front}
+                                  <Markdown rehypePlugins={[rehypeHighlight]}>
+                                    {cardFlipStates[index]
+                                      ? flashcards[index]?.back
+                                      : flashcards[index]?.front}
+                                  </Markdown>
                                 </div>
                               </div>
 
@@ -582,9 +588,6 @@ const StudyPage = () => {
                         : "bg-neutral-50 hover:bg-primary-100"
                     }`}
                   >
-                    <span className="font-black text-neutral-950 mr-2 sm:mr-3">
-                      {optionLetter}.
-                    </span>
                     <span className="text-sm sm:text-base">{option}</span>
                   </button>
                 );

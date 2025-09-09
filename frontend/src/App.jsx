@@ -73,7 +73,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/retake-quiz"
+        path="/retake-quiz/:userId/topic/:topicId"
         element={
           <ProtectedRoute>
             <RetakeQuizPage />

@@ -601,3 +601,35 @@ export const getTopicSessions = async (req, res) => {
     });
   }
 };
+
+export const updateTopicQuizData = async (req, res) => {
+  try {
+    const { topicId } = req.params;
+    const quizCompletionData = req.body;
+    console.log("topic ID", topicId);
+    console.log("quiz completion Data", quizCompletionData);
+
+    // Update the user's quiz data for this topic
+    await tablesDB.updateRow({
+      databaseId: DATABASE_ID,
+      tableId: STUDY_SESSIONS_COLLECTION_ID,
+      rowId: topicId,
+      data: {
+        correctAnswers: quizCompletionData.correctAnswers,
+        selectedQuizAnswers: JSON.stringify(quizCompletionData.selectedAnswers),
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Quiz data updated successfully",
+    });
+  } catch (error) {
+    console.error("❌ Error updating quiz data:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update quiz data",
+      error: error.message,
+    });
+  }
+};
