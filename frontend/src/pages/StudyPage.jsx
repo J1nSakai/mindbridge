@@ -65,6 +65,7 @@ const StudyPage = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizScore, setQuizScore] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
 
   // Carousel state
   const [emblaApi, setEmblaApi] = useState();
@@ -222,7 +223,7 @@ const StudyPage = () => {
       flashcardsSessionData,
       quizSessionData
     );
-
+    setCorrectAnswers(correctAnswers);
     setCurrentStep("complete");
   };
 
@@ -677,31 +678,21 @@ const StudyPage = () => {
               Your Results
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <Card className="p-4 sm:p-6 bg-neutral-50">
+                <div className="text-3xl sm:text-4xl font-black text-primary-500 mb-2">
+                  {correctAnswers}
+                </div>
+                <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                  Correct Answers
+                </div>
+              </Card>
               <Card className="p-4 sm:p-6 bg-neutral-50">
                 <div className="text-3xl sm:text-4xl font-black text-primary-500 mb-2">
                   {quizScore}%
                 </div>
                 <div className="font-bold text-neutral-950 text-sm sm:text-base">
                   Quiz Score
-                </div>
-              </Card>
-
-              <Card className="p-4 sm:p-6 bg-neutral-50">
-                <div className="text-3xl sm:text-4xl font-black text-primary-600 mb-2">
-                  {flashcards.length}
-                </div>
-                <div className="font-bold text-neutral-950 text-sm sm:text-base">
-                  Cards Studied
-                </div>
-              </Card>
-
-              <Card className="p-4 sm:p-6 bg-neutral-50">
-                <div className="text-3xl sm:text-4xl font-black text-neutral-950 mb-2">
-                  3
-                </div>
-                <div className="font-bold text-neutral-950 text-sm sm:text-base">
-                  Activities
                 </div>
               </Card>
             </div>

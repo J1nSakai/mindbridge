@@ -1,6 +1,5 @@
-import { Query } from "node-appwrite";
-import { ID } from "node-appwrite";
 import { validationResult } from "express-validator";
+import { ID, Query } from "node-appwrite";
 import { TablesDataB } from "../config/appwrite.js";
 
 const tablesDB = TablesDataB;

@@ -1,26 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router";
-import { Avatar, AvatarFallback } from "../components/ui/avatar";
-import { Button } from "../components/ui/button";
-import HighlightedText from "../components/ui/HighlightedText";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
-import { userAPI } from "../services/api";
-import {
-  BookOpen,
-  TrendingUp,
-  Trophy,
-  Star,
-  Plus,
-  User,
-  Settings,
-  LogOut,
-} from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { BookOpen, LogOut, Plus, Settings, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { Avatar, AvatarFallback } from "../components/ui/avatar";
+import { Button } from "../components/ui/button";
+import HighlightedText from "../components/ui/HighlightedText";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { useAuth } from "../contexts/AuthContext";
+import { userAPI } from "../services/api";
 
 // Simple Card component matching neubrutalism style
 const Card = ({ children, className = "" }) => (
@@ -34,12 +25,7 @@ const Card = ({ children, className = "" }) => (
 const DashboardPage = () => {
   const { user, logout, userId } = useAuth();
   const navigate = useNavigate();
-  const [stats, setStats] = useState({
-    studySessions: 0,
-    level: 1,
-    achievements: 0,
-    battlesWon: 0,
-  });
+  const [studySessions, setStudySessions] = useState(0);
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,21 +111,7 @@ const DashboardPage = () => {
           const dashboardData = await userAPI.getDashboard(userId);
           console.log("✅ Dashboard data received:", dashboardData);
 
-          // Character data removed - game functionality disabled
-          console.log("🎮 Game functionality disabled...");
-          // const characterData = await gameAPI.getCharacter(userId);
-          console.log("✅ Skipping character data fetch");
-
-          // Update stats with real data
-          const newStats = {
-            studySessions: dashboardData.weeklyStats?.totalSessions || 0,
-            level: 1,
-            achievements: dashboardData.weeklyStats?.achievements || 0,
-            battlesWon: 0,
-          };
-
-          console.log("📈 Setting new stats:", newStats);
-          setStats(newStats);
+          setStudySessions(dashboardData.weeklyStats?.totalSessions || 0);
 
           // Extract topics from all sessions
           const allSessions = dashboardData.recentSessions || [];
@@ -157,13 +129,7 @@ const DashboardPage = () => {
         console.error("🔍 Error details:", error.message);
         console.error("📍 Error stack:", error.stack);
 
-        // Use default stats on error
-        setStats({
-          studySessions: 0,
-          level: 1,
-          achievements: 0,
-          battlesWon: 0,
-        });
+        setStudySessions(0);
 
         // Use empty topics on error
         setTopics([]);
@@ -182,7 +148,6 @@ const DashboardPage = () => {
   };
 
   const handleLearnNewClick = () => {
-    // Navigate to create new topic - we'll implement this later
     console.log("Learn something new clicked");
     navigate("/study");
   };
@@ -225,9 +190,6 @@ const DashboardPage = () => {
               <div className="hidden sm:block text-right text-neutral-50">
                 <p className="text-sm sm:text-lg font-bold">
                   {user?.name || "Learner"}
-                </p>
-                <p className="text-xs sm:text-sm opacity-90">
-                  Level {stats.level}
                 </p>
               </div>
 
@@ -309,52 +271,16 @@ const DashboardPage = () => {
             Your{" "}
             <HighlightedText bgColor="bg-neutral-950">Progress</HighlightedText>
           </h3>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:-rotate-3 transition-all duration-200">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8">
+            <Card className="text-center p-3 sm:p-4 lg:p-6">
               <div className="bg-primary-500 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 rotate-3">
                 <BookOpen className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
               </div>
               <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-500 mb-1 sm:mb-2">
-                {stats.studySessions}
+                {studySessions}
               </div>
               <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
                 Study Sessions
-              </div>
-            </Card>
-
-            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:rotate-3 transition-all duration-200">
-              <div className="bg-primary-600 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 -rotate-3">
-                <TrendingUp className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
-              </div>
-              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 mb-1 sm:mb-2">
-                {stats.level}
-              </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
-                Level
-              </div>
-            </Card>
-
-            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:-rotate-3 transition-all duration-200">
-              <div className="bg-neutral-950 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 rotate-6">
-                <Star className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
-              </div>
-              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-950 mb-1 sm:mb-2">
-                {stats.achievements}
-              </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
-                Achievements
-              </div>
-            </Card>
-
-            <Card className="text-center p-3 sm:p-4 lg:p-6 hover:rotate-3 transition-all duration-200">
-              <div className="bg-primary-300 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 -rotate-6">
-                <Trophy className="text-neutral-950 text-lg sm:text-xl lg:text-2xl" />
-              </div>
-              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-600 mb-1 sm:mb-2">
-                {stats.battlesWon}
-              </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
-                Battles Won
               </div>
             </Card>
           </div>
@@ -372,7 +298,7 @@ const DashboardPage = () => {
             {topics.length > 0 && (
               <Button
                 onClick={handleLearnNewClick}
-                className="bg-neutral-950 text-neutral-50 font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 sm:py-3 hover:scale-105 hover:-translate-y-1 hover:rotate-1 transition-all duration-300 w-full sm:w-auto"
+                className="bg-primary-400 text-neutral-50 font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 sm:py-3 transition-all w-full sm:w-auto"
               >
                 <Plus className="mr-2" />
                 Learn Something New
@@ -435,20 +361,8 @@ const DashboardPage = () => {
                       <h4 className="text-lg sm:text-xl lg:text-2xl font-black text-neutral-950 mb-2 sm:mb-3">
                         {topic.name}
                       </h4>
-                      <div className="mb-3 sm:mb-4">
-                        {/* <div className="flex justify-between text-sm font-bold text-neutral-950 mb-2">
-                        <span>Progress</span>
-                        <span>{topic.progress}%</span>
-                      </div> */}
-                        {/* <div className="w-full bg-neutral-950 rounded-full h-3 border-2 border-neutral-950">
-                        <div
-                          className="bg-primary-500 h-full rounded-full transition-all duration-500"
-                          style={{ width: `${topic.progress}%` }}
-                        ></div>
-                      </div> */}
-                      </div>
+                      <div className="mb-3 sm:mb-4"></div>
                       <div className="flex justify-between text-xs sm:text-sm font-bold text-neutral-950">
-                        {/* <span>{topic.sessionsCount} sessions</span> */}
                         <span>{topic.lastStudied}</span>
                       </div>
                     </Card>

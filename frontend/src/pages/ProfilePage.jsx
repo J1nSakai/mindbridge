@@ -28,8 +28,7 @@ const ProfilePage = () => {
           </h1>
           <Button
             onClick={() => navigate("/dashboard")}
-            variant="outline"
-            className="bg-neutral-50 border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto"
+            className="bg-neutral-50 border-neutral-950  px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto"
           >
             <ArrowLeft className="mr-2 w-4 h-4" />
             Back to Dashboard
@@ -56,13 +55,8 @@ const ProfilePage = () => {
               </h3>
               <div className="space-y-2">
                 <p className="text-sm sm:text-base">
-                  <span className="font-bold">Level:</span> 1
-                </p>
-                <p className="text-sm sm:text-base">
-                  <span className="font-bold">XP:</span> 0
-                </p>
-                <p className="text-sm sm:text-base">
-                  <span className="font-bold">Joined:</span> Today
+                  <span className="font-bold">Joined:</span>{" "}
+                  {new Date(user?.registration).toLocaleDateString()}
                 </p>
               </div>
             </div>
