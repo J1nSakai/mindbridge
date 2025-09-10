@@ -13,9 +13,7 @@ import {
 } from "@/components/ui/card";
 import HighlightedText from "@/components/ui/HighlightedText";
 import { useAuth } from "../contexts/AuthContext";
-import LoadingSpinner, {
-  LoadingSpinnerOnly,
-} from "../components/ui/LoadingSpinner";
+import { LoadingSpinnerOnly } from "../components/ui/LoadingSpinner";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -72,23 +70,23 @@ const LoginPage = () => {
                 MD
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-neutral-950">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text">
               MindBridge
             </h1>
           </div>
-          <p className="text-sm sm:text-base text-neutral-700 font-bold px-2">
+          <p className="text-sm sm:text-base text-text font-bold px-2">
             Welcome back to your{" "}
             <HighlightedText>learning adventure</HighlightedText>!
           </p>
         </div>
 
         {/* Login Card */}
-        <Card className="bg-neutral-50 border-4 border-neutral-950 ">
+        <Card className="border-border">
           <CardHeader className="text-center pb-4 sm:pb-6">
-            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-neutral-950">
+            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-text">
               Login to Your Account
             </CardTitle>
-            <CardDescription className="text-sm sm:text-base text-neutral-700 font-bold px-2">
+            <CardDescription className="text-sm sm:text-base text-text font-bold px-2">
               Enter your credentials to access your dashboard
             </CardDescription>
           </CardHeader>
@@ -104,7 +102,7 @@ const LoginPage = () => {
               <div className="space-y-2">
                 <Label
                   htmlFor="email"
-                  className="text-neutral-950 font-bold text-base sm:text-lg"
+                  className="text-text font-bold text-base sm:text-lg"
                 >
                   Email
                 </Label>
@@ -116,14 +114,14 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-border"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label
                   htmlFor="password"
-                  className="text-neutral-950 font-bold text-base sm:text-lg"
+                  className="text-text font-bold text-base sm:text-lg"
                 >
                   Password
                 </Label>
@@ -135,7 +133,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-border"
                 />
               </div>
 
@@ -143,7 +141,7 @@ const LoginPage = () => {
                 type="submit"
                 size="lg"
                 disabled={authLoading}
-                className="w-full bg-primary-500 text-neutral-50 font-bold text-base sm:text-lg border-4 border-neutral-950 hover:bg-primary-600 disabled:opacity-50 h-10 sm:h-12"
+                className="w-full bg-primary-400 text-text font-bold text-base sm:text-lg  border-border disabled:opacity-50 h-10 sm:h-12"
               >
                 {authLoading ? (
                   <LoadingSpinnerOnly message="Logging in..." />
@@ -156,11 +154,11 @@ const LoginPage = () => {
 
           <CardFooter className="flex-col space-y-3 sm:space-y-4 px-4 sm:px-6">
             <div className="text-center pt-2 sm:pt-4">
-              <p className="text-sm sm:text-base text-neutral-700 font-bold">
+              <p className="text-sm sm:text-base text-text font-bold">
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-primary-600 font-black hover:text-primary-500 hover:-translate-y-1 transition-all inline-block"
+                  className="text-primary-500 font-black hover:text-primary-600 hover:-translate-y-1 transition-all inline-block"
                 >
                   Sign up here
                 </Link>

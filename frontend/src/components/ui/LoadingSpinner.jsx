@@ -9,7 +9,7 @@ const LoadingSpinner = ({ size = "md", message = "Loading..." }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-50">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div className="relative">
         {/* Outer rotating border */}
         <div
@@ -25,7 +25,7 @@ const LoadingSpinner = ({ size = "md", message = "Loading..." }) => {
       </div>
 
       {message && (
-        <p className="mt-4 text-neutral-600 font-bold text-lg animate-pulse">
+        <p className="mt-4 text-text font-bold text-lg animate-pulse">
           {message}
         </p>
       )}
@@ -35,9 +35,7 @@ const LoadingSpinner = ({ size = "md", message = "Loading..." }) => {
         <div className="bg-primary-500 p-2 rounded-lg rotate-3 border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <span className="text-lg font-extrabold text-neutral-50">MB</span>
         </div>
-        <span className="text-xl font-extrabold text-neutral-950">
-          MindBridge
-        </span>
+        <span className="text-xl font-extrabold text-text">MindBridge</span>
       </div>
     </div>
   );
@@ -66,9 +64,7 @@ export const LoadingSpinnerOnly = ({ message, size = "sm" }) => {
         </div>
       </div>
       {message && (
-        <span className="text-white font-bold text-sm">
-          {message}
-        </span>
+        <span className="text-white font-bold text-sm">{message}</span>
       )}
     </div>
   );

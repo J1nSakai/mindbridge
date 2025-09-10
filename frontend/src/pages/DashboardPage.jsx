@@ -10,17 +10,19 @@ import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import HighlightedText from "../components/ui/HighlightedText";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+import ThemeToggle from "../components/ui/ThemeToggle";
 import { useAuth } from "../contexts/AuthContext";
 import { userAPI } from "../services/api";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Simple Card component matching neubrutalism style
-const Card = ({ children, className = "" }) => (
-  <div
-    className={`bg-neutral-50 rounded-lg border-4 border-neutral-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${className}`}
-  >
-    {children}
-  </div>
-);
+// const Card = ({ children, className = "" }) => (
+//   <div
+//     className={`bg-secondary-background rounded-lg border-4 border-border shadow-shadow ${className}`}
+//   >
+//     {children}
+//   </div>
+// );
 
 const DashboardPage = () => {
   const { user, logout, userId } = useAuth();
@@ -157,7 +159,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-primary-100 font-sans relative">
+    <div className="min-h-screen bg-background font-sans relative">
       {/* Grid Background */}
       <div
         className="absolute inset-0 opacity-30"
@@ -170,12 +172,12 @@ const DashboardPage = () => {
         }}
       />
       {/* Header */}
-      <header className="bg-primary-400 border-b-4 sm:border-b-6 lg:border-b-8 border-neutral-950 shadow-[0px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[0px_6px_0px_0px_rgba(0,0,0,1)] lg:shadow-[0px_8px_0px_0px_rgba(0,0,0,1)] relative z-10">
+      <header className="bg-primary-400 border-b-4 sm:border-b-6 lg:border-b-8 border-border relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           <div className="flex justify-between items-center">
             {/* Logo/Brand */}
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="bg-primary-500 p-1.5 sm:p-2 rounded-lg rotate-3 border-2 sm:border-4 border-neutral-950 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:rotate-6 hover:scale-110 transition-all duration-300">
+              <div className="bg-primary-500 p-1.5 sm:p-2 rounded-lg rotate-3 border-2 sm:border-4 border-border shadow-shadow sm:shadow-shadow hover:rotate-6 hover:scale-110 transition-all duration-300">
                 <span className="text-lg sm:text-2xl font-extrabold text-neutral-50">
                   MB
                 </span>
@@ -208,7 +210,7 @@ const DashboardPage = () => {
                 <PopoverContent
                   sideOffset={10}
                   align="left"
-                  className={"bg-neutral-50"}
+                  className={"bg-secondary-background"}
                 >
                   <div className="flex flex-col">
                     <div className="p-2">
@@ -218,13 +220,19 @@ const DashboardPage = () => {
                         }}
                         className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-primary-100 transition-colors text-left"
                       >
-                        <User className="text-neutral-600" size={18} />
-                        <span className="font-bold text-neutral-950">
+                        <User className="text-text" size={18} />
+                        <span className="font-bold text-text">
                           View Profile
                         </span>
                       </button>
+                      <div className=" border-t-2 border-neutral-200 mt-2">
+                        <div className="flex items-center justify-between my-2">
+                          <span className="text-text font-bold ">Theme </span>
+                          <ThemeToggle />
+                        </div>
+                      </div>
 
-                      <button
+                      {/* <button
                         onClick={() => {
                           // Navigate to settings when implemented
                         }}
@@ -234,7 +242,7 @@ const DashboardPage = () => {
                         <span className="font-bold text-neutral-950">
                           Settings
                         </span>
-                      </button>
+                      </button> */}
 
                       <div className="border-t-2 border-neutral-200 mt-2 pt-2">
                         <button
@@ -259,46 +267,48 @@ const DashboardPage = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
         {/* Welcome Message */}
         <div className="mb-8 sm:mb-12 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-neutral-950 mb-4 px-2">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-text mb-4 px-2">
             Welcome back,{" "}
             <HighlightedText>{user?.name || "Learner"}</HighlightedText>!
           </h2>
         </div>
 
         {/* Quick Stats */}
-        <Card className="mb-8 sm:mb-12 bg-primary-200 p-4 sm:p-6 lg:p-8">
-          <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-neutral-950 mb-6 sm:mb-8 text-center">
+        <Card className="mb-8 sm:mb-12 bg-secondary-background p-4 sm:p-6 lg:p-8">
+          <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-text mb-6 sm:mb-8 text-center">
             Your{" "}
-            <HighlightedText bgColor="bg-neutral-950">Progress</HighlightedText>
+            <HighlightedText bgColor="bg-primary-500">Progress</HighlightedText>
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8">
             <Card className="text-center p-3 sm:p-4 lg:p-6">
-              <div className="bg-primary-500 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 rotate-3">
-                <BookOpen className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
-              </div>
-              <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-500 mb-1 sm:mb-2">
-                {studySessions}
-              </div>
-              <div className="text-neutral-950 font-bold text-xs sm:text-sm lg:text-base">
-                Study Sessions
-              </div>
+              <CardContent>
+                <div className="bg-primary-500 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-2 sm:mb-3 rotate-3">
+                  <BookOpen className="text-neutral-50 text-lg sm:text-xl lg:text-2xl" />
+                </div>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-primary-500 mb-1 sm:mb-2">
+                  {studySessions}
+                </div>
+                <div className="text-text font-bold text-xs sm:text-sm lg:text-base">
+                  Study Sessions
+                </div>
+              </CardContent>
             </Card>
           </div>
         </Card>
 
         {/* Topics Section */}
-        <Card className="bg-primary-300 p-4 sm:p-6 lg:p-8">
+        <Card className="bg-secondary-background p-4 sm:p-6 lg:p-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-neutral-950">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-text">
               Your{" "}
-              <HighlightedText bgColor="bg-neutral-950">
+              <HighlightedText bgColor="bg-primary-500">
                 Learning Topics
               </HighlightedText>
             </h3>
             {topics.length > 0 && (
               <Button
                 onClick={handleLearnNewClick}
-                className="bg-primary-400 text-neutral-50 font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 sm:py-3 transition-all w-full sm:w-auto"
+                className="bg-primary-400 text-text font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 sm:py-3 transition-all w-full sm:w-auto"
               >
                 <Plus className="mr-2" />
                 Learn Something New
@@ -308,22 +318,24 @@ const DashboardPage = () => {
 
           {topics.length === 0 ? (
             <Card className="text-center py-16">
-              <div className="bg-primary-500 inline-block p-8 rounded-xl border-4 border-neutral-950 mb-6 rotate-3 animate-bounce shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <BookOpen className="text-6xl text-neutral-50" />
-              </div>
-              <h4 className="text-3xl font-black text-neutral-950 mb-4">
-                No study topics yet!
-              </h4>
-              <p className="text-xl text-neutral-600 font-bold mb-8">
-                Complete your first study session to see topics here
-              </p>
-              <Button
-                onClick={handleLearnNewClick}
-                className="bg-primary-500 text-neutral-50 font-bold text-xl px-8 py-4 hover:scale-105 hover:-translate-y-2 hover:rotate-3 transition-all duration-300"
-              >
-                <Plus className="mr-2" />
-                Start Learning
-              </Button>
+              <CardContent>
+                <div className="bg-primary-500 inline-block p-8 rounded-xl border-4 border-neutral-950 mb-6 rotate-3 animate-bounce shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <BookOpen className="text-6xl text-neutral-50" />
+                </div>
+                <h4 className="text-3xl font-black text-neutral-950 mb-4">
+                  No study topics yet!
+                </h4>
+                <p className="text-xl text-neutral-600 font-bold mb-8">
+                  Complete your first study session to see topics here
+                </p>
+                <Button
+                  onClick={handleLearnNewClick}
+                  className="bg-primary-500 text-neutral-50 font-bold text-xl px-8 py-4 hover:scale-105 hover:-translate-y-2 hover:rotate-3 transition-all duration-300"
+                >
+                  <Plus className="mr-2" />
+                  Start Learning
+                </Button>
+              </CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -349,22 +361,20 @@ const DashboardPage = () => {
                     onClick={() => handleTopicClick(topic.id)}
                   >
                     <Card
-                      className={`${
-                        colors[index % colors.length]
-                      } p-4 sm:p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-105 ${
-                        rotations[index % rotations.length]
-                      } hover:rotate-0`}
+                      className={` p-4 sm:p-6 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-105`}
                     >
-                      <div className="bg-neutral-50 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-neutral-950 mb-3 sm:mb-4 rotate-3">
-                        <BookOpen className="text-lg sm:text-xl lg:text-2xl text-neutral-950" />
-                      </div>
-                      <h4 className="text-lg sm:text-xl lg:text-2xl font-black text-neutral-950 mb-2 sm:mb-3">
-                        {topic.name}
-                      </h4>
-                      <div className="mb-3 sm:mb-4"></div>
-                      <div className="flex justify-between text-xs sm:text-sm font-bold text-neutral-950">
-                        <span>{topic.lastStudied}</span>
-                      </div>
+                      <CardContent>
+                        <div className="bg-primary-500 inline-block p-2 sm:p-3 rounded-lg border-2 sm:border-4 border-border mb-3 sm:mb-4 rotate-3">
+                          <BookOpen className="text-lg sm:text-xl lg:text-2xl text-neutral-50" />
+                        </div>
+                        <h4 className="text-lg sm:text-xl lg:text-2xl font-black text-text mb-2 sm:mb-3">
+                          {topic.name}
+                        </h4>
+                        <div className="mb-3 sm:mb-4"></div>
+                        <div className="flex justify-between text-xs sm:text-sm font-bold text-text">
+                          <span>{topic.lastStudied}</span>
+                        </div>
+                      </CardContent>
                     </Card>
                   </div>
                 );

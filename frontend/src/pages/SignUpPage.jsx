@@ -87,22 +87,22 @@ const SignUpPage = () => {
                 MD
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-neutral-950">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text">
               MindBridge
             </h1>
           </div>
-          <p className="text-sm sm:text-base text-neutral-700 font-bold px-2">
+          <p className="text-sm sm:text-base text-text font-bold px-2">
             Start your <HighlightedText>educational journey</HighlightedText>!
           </p>
         </div>
 
         {/* Sign Up Card */}
-        <Card className=" bg-neutral-50 border-4 border-neutral-950 ">
+        <Card className="border-border ">
           <CardHeader className="text-center pb-4 sm:pb-6">
-            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-neutral-950">
+            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-text">
               Create Your Account
             </CardTitle>
-            <CardDescription className="text-sm sm:text-base text-neutral-700 font-bold px-2">
+            <CardDescription className="text-sm sm:text-base text-text font-bold px-2">
               Join the learning revolution today
             </CardDescription>
           </CardHeader>
@@ -120,7 +120,7 @@ const SignUpPage = () => {
               <div className="space-y-2">
                 <Label
                   htmlFor="fullName"
-                  className="text-neutral-950 font-bold text-base sm:text-lg"
+                  className="text-text font-bold text-base sm:text-lg"
                 >
                   Full Name
                 </Label>
@@ -132,14 +132,14 @@ const SignUpPage = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-border"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label
                   htmlFor="email"
-                  className="text-neutral-950 font-bold text-base sm:text-lg"
+                  className="text-textfont-bold text-base sm:text-lg"
                 >
                   Email
                 </Label>
@@ -151,14 +151,14 @@ const SignUpPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-border"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label
                   htmlFor="password"
-                  className="text-neutral-950 font-bold text-base sm:text-lg"
+                  className="text-text font-bold text-base sm:text-lg"
                 >
                   Password
                 </Label>
@@ -170,14 +170,14 @@ const SignUpPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-border"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-neutral-950 font-bold text-base sm:text-lg"
+                  className="text-text font-bold text-base sm:text-lg"
                 >
                   Confirm Password
                 </Label>
@@ -189,7 +189,7 @@ const SignUpPage = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
-                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-4 border-neutral-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:border-primary-500"
+                  className="h-10 sm:h-12 text-base sm:text-lg font-bold border-border"
                 />
               </div>
 
@@ -198,7 +198,7 @@ const SignUpPage = () => {
                 type="submit"
                 size="lg"
                 disabled={authLoading}
-                className="w-full bg-primary-500 text-neutral-50 font-bold text-base sm:text-lg border-4 border-neutral-950 hover:bg-primary-600 disabled:opacity-50 h-10 sm:h-12"
+                className="w-full bg-primary-400 text-text font-bold text-base sm:text-lg border-border disabled:opacity-50 h-10 sm:h-12"
               >
                 {authLoading ? (
                   <LoadingSpinnerOnly message="Creating Account..." />
@@ -211,11 +211,11 @@ const SignUpPage = () => {
 
           <CardFooter className="flex-col space-y-3 sm:space-y-4 px-4 sm:px-6">
             <div className="text-center pt-2 sm:pt-4">
-              <p className="text-sm sm:text-base text-neutral-700 font-bold">
+              <p className="text-sm sm:text-base text-text font-bold">
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-primary-600 font-black hover:text-primary-500 hover:-translate-y-1 transition-all inline-block"
+                  className="text-primary-500 font-black hover:text-primary-600 hover:-translate-y-1 transition-all inline-block"
                 >
                   Login here
                 </Link>

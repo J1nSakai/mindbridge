@@ -83,7 +83,7 @@ const RetakeQuizPage = () => {
 
   if (currentStep === "quiz") {
     return (
-      <div className="min-h-screen bg-primary-100 p-4 sm:p-6 relative">
+      <div className="min-h-screen bg-background p-4 sm:p-6 relative">
         {/* Grid Background */}
         <div
           className="absolute inset-0 opacity-30"
@@ -97,12 +97,12 @@ const RetakeQuizPage = () => {
         />
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl underline font-black text-neutral-950">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-text">
               Quiz: {topicName}
             </h1>
             <Button
               onClick={() => navigate(`/topic/${topicId}`)}
-              className="bg-neutral-300 text-neutral-950 font-bold px-3 sm:px-4 py-2 w-full sm:w-auto"
+              className="bg-primary-400 text-text font-bold px-3 sm:px-4 py-2 w-full sm:w-auto"
             >
               <ArrowLeft className="mr-2" />
               Back to Study
@@ -110,13 +110,13 @@ const RetakeQuizPage = () => {
           </div>
 
           <div className="text-center mb-4 sm:mb-6">
-            <span className="text-base sm:text-lg font-bold text-neutral-600">
+            <span className="text-base sm:text-lg font-bold text-text">
               Question {currentQuestionIndex + 1} of {quiz.length}
             </span>
           </div>
 
           <Card className="p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 bg-primary-100">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-neutral-950 mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-text mb-4 sm:mb-6">
               {quiz[currentQuestionIndex].question}
             </h2>
 
@@ -137,8 +137,8 @@ const RetakeQuizPage = () => {
                     }}
                     className={`w-full p-3 sm:p-4 text-left border-2 sm:border-4 border-neutral-950 rounded-lg font-bold transition-all duration-300 ${
                       isSelected
-                        ? "bg-primary-500 text-neutral-50"
-                        : "bg-neutral-100"
+                        ? "bg-primary-500 text-black"
+                        : "bg-secondary-background"
                     }`}
                   >
                     <span className="text-sm sm:text-base">{option}</span>

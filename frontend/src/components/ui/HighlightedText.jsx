@@ -8,7 +8,7 @@ const HighlightedText = ({
 }) => {
   return (
     <span
-      className={`${bgColor} px-2 ${textColor} ${skew} inline-block border-4 border-neutral-950`}
+      className={`${bgColor} px-2 ${textColor} ${skew} inline-block border-4 border-border`}
     >
       {children}
     </span>
