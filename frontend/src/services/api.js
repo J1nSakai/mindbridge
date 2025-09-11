@@ -5,17 +5,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 class ApiClient {
   constructor() {
     this.baseURL = API_BASE_URL;
-    this.token = localStorage.getItem("authToken");
-  }
-
-  // Set authentication token
-  setToken(token) {
-    this.token = token;
-    if (token) {
-      localStorage.setItem("authToken", token);
-    } else {
-      localStorage.removeItem("authToken");
-    }
   }
 
   // Get authentication headers
@@ -23,10 +12,6 @@ class ApiClient {
     const headers = {
       "Content-Type": "application/json",
     };
-
-    if (this.token) {
-      headers.Authorization = `Bearer ${this.token}`;
-    }
 
     return headers;
   }
@@ -36,6 +21,7 @@ class ApiClient {
     const url = `${this.baseURL}${endpoint}`;
     const config = {
       headers: this.getHeaders(),
+      credentials: "include",
       ...options,
     };
 
@@ -89,10 +75,7 @@ const apiClient = new ApiClient();
 export const authAPI = {
   register: (userData) => apiClient.post("/auth/signup", userData),
   login: (credentials) => apiClient.post("/auth/login", credentials),
-  logout: () => {
-    apiClient.setToken(null);
-    return Promise.resolve();
-  },
+  logout: () => apiClient.post("/auth/logout"),
   getCurrentUser: () => apiClient.get("/auth/me"),
 };
 
@@ -130,25 +113,23 @@ export const aiAPI = {
 // Export the API client for direct use if needed
 export { apiClient };
 
-// Helper function to set token from login response
-export const setAuthToken = (token) => {
-  apiClient.setToken(token);
-};
-
-// Helper function to check if user is authenticated
-export const isAuthenticated = () => {
-  return !!apiClient.token;
-};
-
-// Helper function to get current user ID from token
-export const getCurrentUserId = () => {
-  if (!apiClient.token) return null;
-
+// Check if user is authenticated by making a request to the server
+export const isAuthenticated = async () => {
   try {
-    const payload = JSON.parse(atob(apiClient.token.split(".")[1]));
-    return payload.userId;
+    await apiClient.get("/auth/me");
+    return true;
   } catch (error) {
-    console.error("Error parsing token:", error);
+    return false;
+  }
+};
+
+// Get current user ID from server
+export const getCurrentUserId = async () => {
+  try {
+    const response = await apiClient.get("/auth/me");
+    return response.user?.userId || response.user?.$id;
+  } catch (error) {
+    console.error("Error getting current user:", error);
     return null;
   }
 };

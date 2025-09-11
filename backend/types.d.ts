@@ -7,3 +7,4 @@ declare module 'helmet';
 declare module 'express-rate-limit';
 declare module 'express-validator';
 declare module 'node-appwrite';
+declare module 'cookie-parser';

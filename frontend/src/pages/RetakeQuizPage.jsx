@@ -224,32 +224,32 @@ const RetakeQuizPage = () => {
                 strokeWidth={6}
               />
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-950 mb-3 sm:mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-text mb-3 sm:mb-4">
               Congratulations!
             </h1>
-            <p className="text-lg sm:text-xl text-neutral-600 font-bold px-4">
+            <p className="text-lg sm:text-xl text-text font-bold px-4">
               You retook the quiz on "{topicName}"
             </p>
           </div>
 
           <Card className="p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 bg-primary-200">
-            <h2 className="text-2xl sm:text-3xl font-black text-neutral-950 mb-4 sm:mb-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-text mb-4 sm:mb-6">
               Your Results
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <Card className="p-4 sm:p-6 bg-neutral-50">
+              <Card className="p-4 sm:p-6 bg-secondary-background">
                 <div className="text-3xl sm:text-4xl font-black text-primary-500 mb-2">
                   {correctAnswers}
                 </div>
-                <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                <div className="font-bold text-text text-sm sm:text-base">
                   Correct Answers
                 </div>
               </Card>
-              <Card className="p-4 sm:p-6 bg-neutral-50">
+              <Card className="p-4 sm:p-6 bg-secondary-background">
                 <div className="text-3xl sm:text-4xl font-black text-primary-500 mb-2">
                   {quizScore}%
                 </div>
-                <div className="font-bold text-neutral-950 text-sm sm:text-base">
+                <div className="font-bold text-text text-sm sm:text-base">
                   Quiz Score
                 </div>
               </Card>

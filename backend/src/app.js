@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import cookieParser from "cookie-parser";
 
 // Import routes
 import authRoutes from "./routes/auth.js";
@@ -55,6 +56,9 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
+
+// Cookie parser middleware
+app.use(cookieParser());
 
 app.use(cors(corsOptions));
 

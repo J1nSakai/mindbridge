@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   authAPI,
-  setAuthToken,
   isAuthenticated,
-  getCurrentUserId,
 } from "../services/api";
 
 const AuthContext = createContext();
@@ -26,14 +24,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        if (isAuthenticated()) {
+        const isAuth = await isAuthenticated();
+        if (isAuth) {
           const userData = await authAPI.getCurrentUser();
           setUser(userData.user);
         }
       } catch (error) {
         console.error("Auth check failed:", error);
-        // Clear invalid token
-        setAuthToken(null);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -50,10 +48,7 @@ export const AuthProvider = ({ children }) => {
 
       const response = await authAPI.login({ email, password });
 
-      // Set token in API client
-      setAuthToken(response.token);
-
-      // Set user data
+      // Set user data (token is now in HTTP-only cookie)
       setUser(response.user);
 
       return response;
@@ -73,10 +68,7 @@ export const AuthProvider = ({ children }) => {
 
       const response = await authAPI.register(userData);
 
-      // Set token in API client
-      setAuthToken(response.token);
-
-      // Set user data
+      // Set user data (token is now in HTTP-only cookie)
       setUser(response.user);
 
       return response;
@@ -96,7 +88,6 @@ export const AuthProvider = ({ children }) => {
       console.error("Logout error:", error);
     } finally {
       setUser(null);
-      setAuthToken(null);
     }
   };
 
@@ -115,7 +106,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     clearError,
     isAuthenticated: !!user,
-    userId: user?.$id || getCurrentUserId(),
+    userId: user?.id,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

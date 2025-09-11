@@ -61,9 +61,16 @@ export const signupUser = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 60,
+      path: "/",
+    });
+
     res.status(201).json({
       message: "User created successfully",
-      token: token,
       user: {
         id: user.$id,
         email: user.email,
@@ -127,6 +134,14 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 60,
+      path: "/",
+    });
+
     console.log("✅ User logged in successfully:", user.$id);
 
     res.json({
@@ -160,7 +175,13 @@ export const logoutUser = async (_req, res) => {
   try {
     // For server-side auth, we just need to invalidate the JWT token
     // The frontend will remove the token from localStorage
-    res.json({
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+    });
+    res.status(200).json({
       message: "Logout successful",
     });
   } catch (error) {
