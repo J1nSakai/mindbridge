@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { BookOpenCheck, Heart, NotepadText, WalletCards } from "lucide-react";
 import LinkedIn from "@/assets/social_icons/LinkedIn";
-import Github from "@/assets/social_icons/github";
+import Github from "@/assets/social_icons/Github";
 
 const LandingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
