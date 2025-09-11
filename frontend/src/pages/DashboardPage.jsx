@@ -245,6 +245,7 @@ const DashboardPage = () => {
                             await logout();
                             setLogoutLoading(false);
                           }}
+                          disabled={logoutLoading}
                           className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-100 transition-colors text-left"
                         >
                           {logoutLoading ? (
