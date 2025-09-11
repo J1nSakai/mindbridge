@@ -58,7 +58,7 @@ export const signupUser = async (req, res) => {
         email: user.email,
       },
       process.env.JWT_SECRET || "fallback-secret",
-      { expiresIn: "7d" }
+      { expiresIn: "1h" }
     );
 
     res.status(201).json({
@@ -124,7 +124,7 @@ export const loginUser = async (req, res) => {
         email: user.email,
       },
       process.env.JWT_SECRET || "fallback-secret",
-      { expiresIn: "7d" }
+      { expiresIn: "1h" }
     );
 
     console.log("✅ User logged in successfully:", user.$id);

@@ -1,17 +1,15 @@
 import express from "express";
-import { validationResult } from "express-validator";
-import { verifyToken } from "../middleware/auth.middleware.js";
-import { initializeAIClient } from "../config/ai.config.js";
-import {
-  validateQuizRequest,
-  validateTopicInput,
-} from "../middleware/ai.middleware.js";
 import {
   generateAISummaryforTopic,
   generateFlashcardsForTopic,
   generateQuizForTopic,
   getExplanationForTopic,
 } from "../controllers/ai.controller.js";
+import {
+  validateQuizRequest,
+  validateTopicInput,
+} from "../middleware/ai.middleware.js";
+import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 

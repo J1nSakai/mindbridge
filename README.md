@@ -2,7 +2,7 @@
 
 **Transform any topic into personalized study materials with AI-powered learning tools.**
 
-MindBridge is a full-stack MERN application that leverages artificial intelligence to create personalized learning experiences. Generate summaries, flashcards, and interactive quizzes instantly to accelerate your learning journey.
+MindBridge is a full-stack AERN application that leverages artificial intelligence to create personalized learning experiences. Generate summaries, flashcards, and interactive quizzes instantly to accelerate your learning journey.
 
 ## ✨ Features
 
