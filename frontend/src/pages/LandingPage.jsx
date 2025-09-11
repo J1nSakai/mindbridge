@@ -5,7 +5,6 @@ import HowItWorksStep from "@/components/ui/HowItWorksStep";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-import Github from "@/assets/social_icons/github";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { BookOpenCheck, Heart, NotepadText, WalletCards } from "lucide-react";
 import LinkedIn from "@/assets/social_icons/LinkedIn";
