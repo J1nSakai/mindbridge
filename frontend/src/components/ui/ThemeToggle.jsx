@@ -11,7 +11,7 @@ const ThemeToggle = ({ className = "" }) => {
       onClick={toggleTheme}
       className={`
         relative inline-flex items-center justify-center
-        w-12 h-12 rounded-full
+        h-6 w-6 md:w-12 md:h-12 rounded-full
         bg-secondary-background border-2 border-border
         hover:bg-background transition-all duration-300
         focus:outline-none

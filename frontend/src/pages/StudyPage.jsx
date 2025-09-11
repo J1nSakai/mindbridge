@@ -1,5 +1,5 @@
 import Star4 from "@/components/stars/s4";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -36,7 +36,6 @@ import { useNavigate } from "react-router";
 import { Button } from "../components/ui/button";
 import { useAuth } from "../contexts/AuthContext";
 import { aiAPI, userAPI } from "../services/api";
-import ThemeToggle from "../components/ui/ThemeToggle";
 
 const StudyPage = () => {
   const { userId } = useAuth();
@@ -59,6 +58,7 @@ const StudyPage = () => {
   const [summary, setSummary] = useState(null);
   const [flashcards, setFlashcards] = useState([]);
   const [quiz, setQuiz] = useState(null);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   // Flashcard states
   const [cardFlipStates, setCardFlipStates] = useState({}); // Track flip state for each card
@@ -78,6 +78,7 @@ const StudyPage = () => {
 
     const onSelect = () => {
       const currIndex = emblaApi.selectedScrollSnap();
+      setCurrentCardIndex(currIndex); // Sync with carousel position
 
       // Optional: detect swipe direction
       console.log("Current slide:", currIndex);
@@ -85,6 +86,9 @@ const StudyPage = () => {
 
     // Add the event listener
     emblaApi.on("select", onSelect);
+
+    // Set initial index
+    setCurrentCardIndex(emblaApi.selectedScrollSnap());
 
     // Cleanup function
     return () => {
@@ -246,6 +250,7 @@ const StudyPage = () => {
     setQuizScore(0);
     setSummarySessionData(null);
     setFlashcardsSessionData(null);
+    setCurrentCardIndex(0);
   };
 
   const toggleCardFlip = (index) => {
@@ -385,7 +390,7 @@ const StudyPage = () => {
         />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-            <h1 className=" flex flex-row  items-center justify-center text-2xl sm:text-3xl lg:text-4xl font-black text-text">
+            <h1 className=" flex flex-row order-2 sm:order-1 items-center justify-center text-2xl sm:text-3xl lg:text-4xl font-black text-text">
               <BookOpen className="mr-2" size={40} /> Study: {topic}
             </h1>
             <Button
@@ -393,7 +398,7 @@ const StudyPage = () => {
                 setCurrentStep("input");
                 resetStudy();
               }}
-              className="bg-primary-400 text-text font-bold px-3 sm:px-4 py-2 w-full sm:w-auto"
+              className="bg-primary-400 text-text order-1 sm:order-2 font-bold px-3 sm:px-4 py-2 w-full sm:w-auto"
             >
               <ArrowLeft className="mr-2" />
               Back
@@ -420,7 +425,7 @@ const StudyPage = () => {
             {/* Flashcards Section */}
             <div className="flex-1 select-none">
               <h2 className="text-2xl sm:text-3xl font-black text-text mb-4 sm:mb-6">
-                Flashcards
+                Flashcards ({currentCardIndex + 1} of {flashcards.length})
               </h2>
 
               {flashcards.length > 0 && (
@@ -439,35 +444,56 @@ const StudyPage = () => {
                             }`}
                           >
                             <Card
-                              className={`p-4 sm:p-6 lg:p-8 mb-6 cursor-pointer transition-all duration-300 bg-primary-100`}
+                              className={`mb-6 cursor-pointer transition-all duration-300 bg-primary-100`}
                               onClick={() => toggleCardFlip(index)}
-                              style={{
-                                minHeight: "200px",
-                              }}
                             >
-                              <div className="text-center min-h-[120px] sm:min-h-[150px] flex items-center justify-center">
-                                <div className="text-lg sm:text-xl font-bold text-text">
-                                  <Markdown rehypePlugins={[rehypeHighlight]}>
-                                    {cardFlipStates[index]
-                                      ? flashcards[index]?.back
-                                      : flashcards[index]?.front}
-                                  </Markdown>
+                              <CardContent>
+                                <div className="text-center min-h-[120px] sm:min-h-[150px] flex items-center justify-center">
+                                  <div className="text-lg sm:text-xl font-bold text-text">
+                                    <Markdown rehypePlugins={[rehypeHighlight]}>
+                                      {cardFlipStates[index]
+                                        ? flashcards[index]?.back
+                                        : flashcards[index]?.front}
+                                    </Markdown>
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div className="text-center mt-3 sm:mt-4">
-                                <span className="text-xs sm:text-sm font-bold text-neutral-600">
-                                  Click to{" "}
-                                  {cardFlipStates[index]
-                                    ? "see question"
-                                    : "reveal answer"}
-                                </span>
-                              </div>
+                                <div>
+                                  <p className="text-xs sm:text-sm text-neutral-500 text-center mt-4 sm:mt-6">
+                                    Click to flip
+                                  </p>
+                                </div>
+                                <CardFooter
+                                  className={
+                                    "flex sm:hidden justify-between text-xs sm:text-sm text-neutral-500 mt-4 sm:mt-6"
+                                  }
+                                >
+                                  <div
+                                    className={` items-center justify-center ${
+                                      currentCardIndex === 0 ? "hidden" : "flex"
+                                    }`}
+                                  >
+                                    Swipe Right
+                                    <ArrowRight className="ml-2 sm:ml-4 h-4 sm:h-6 w-4 sm:w-6" />
+                                  </div>
+                                  <div
+                                    className={` items-center justify-center ${
+                                      currentCardIndex === flashcards.length - 1
+                                        ? "hidden"
+                                        : "flex"
+                                    }`}
+                                  >
+                                    <ArrowLeft className="mr-2 sm:mr-4 h-4 sm:h-6 w-4 sm:w-6" />
+                                    Swipe Left
+                                  </div>
+                                </CardFooter>
+                              </CardContent>
                             </Card>
                           </CarouselItem>
                         );
                       })}
                     </CarouselContent>
+
                     <div className="hidden sm:flex">
                       <CarouselPrevious />
                       <CarouselNext />

@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -7,7 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, RotateCcw, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
@@ -199,7 +199,7 @@ const TopicPage = () => {
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
-            <div className="flex-1">
+            <div className="flex-1 order-2 sm:order-1">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-text mb-2 px-2 sm:px-0">
                 {topicName}
               </h1>
@@ -209,7 +209,7 @@ const TopicPage = () => {
             </div>
             <Button
               onClick={() => navigate("/dashboard")}
-              className="bg-primary-400 text-text px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto sm:flex-shrink-0"
+              className="bg-primary-400 text-text order-1 sm:order-2 px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto sm:flex-shrink-0"
             >
               <ArrowLeft className="mr-2 w-4 h-4" />
               Back to Dashboard
@@ -306,6 +306,31 @@ const TopicPage = () => {
                               </p>
                             </div>
                           </CardContent>
+                          <CardFooter
+                            className={
+                              "flex sm:hidden justify-between text-xs sm:text-sm text-neutral-500 mt-4 sm:mt-6"
+                            }
+                          >
+                            <div
+                              className={` items-center justify-center ${
+                                currentCardIndex === 0 ? "hidden" : "flex"
+                              }`}
+                            >
+                              Swipe Right
+                              <ArrowRight className="ml-2 sm:ml-4 h-4 sm:h-6 w-4 sm:w-6" />
+                            </div>
+                            <div
+                              className={` items-center justify-center ${
+                                currentCardIndex ===
+                                JSON.parse(topicData.flashCards).length - 1
+                                  ? "hidden"
+                                  : "flex"
+                              }`}
+                            >
+                              <ArrowLeft className="mr-2 sm:mr-4 h-4 sm:h-6 w-4 sm:w-6" />
+                              Swipe Left
+                            </div>
+                          </CardFooter>
                         </Card>
                       </CarouselItem>
                     );

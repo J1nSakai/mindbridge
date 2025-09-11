@@ -8,6 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 const ProfilePage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const date = new Date(user?.registration);
+  const formattedDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <div className="min-h-screen bg-primary-100 p-4 sm:p-6 relative">
@@ -23,13 +29,13 @@ const ProfilePage = () => {
         }}
       />
       <div className="max-w-4xl mx-auto relative z-10">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 sm:mb-8 px-2 sm:px-0 justify-between">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text">
+        <div className="flex flex-col  sm:flex-row sm:items-center gap-4 mb-6 sm:mb-8 px-2 sm:px-0 justify-between">
+          <h1 className="text-2xl sm:text-3xl order-2 sm:order-1 lg:text-4xl font-extrabold text-text">
             Profile
           </h1>
           <Button
             onClick={() => navigate("/dashboard")}
-            className="bg-primary-400 border-border text-text  px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto"
+            className="bg-primary-400 border-border text-text order-1 sm:order-2 px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto"
           >
             <ArrowLeft className="mr-2 w-4 h-4" />
             Back to Dashboard
@@ -57,7 +63,7 @@ const ProfilePage = () => {
               <div className="space-y-2">
                 <p className="text-sm sm:text-base">
                   <span className="font-bold">Joined:</span>{" "}
-                  {new Date(user?.registration).toLocaleDateString()}
+                  {date.toLocaleDateString()}
                 </p>
               </div>
             </div>

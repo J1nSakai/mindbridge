@@ -58,6 +58,7 @@ const LandingPage = () => {
 
             <div className="flex gap-2 sm:gap-4">
               <ThemeToggle />
+
               <Button
                 onClick={() => navigate("/login")}
                 className={
@@ -66,12 +67,14 @@ const LandingPage = () => {
               >
                 Login
               </Button>
-              <Button
-                onClick={() => navigate("/signup")}
-                className="bg-primary-600 text-text font-bold py-3 sm:py-6 px-3 sm:px-6 transition text-xs sm:text-sm"
-              >
-                Sign Up
-              </Button>
+              <div className="hidden md:block">
+                <Button
+                  onClick={() => navigate("/signup")}
+                  className="bg-primary-600 text-text font-bold py-3 sm:py-6 px-3 sm:px-6 transition text-xs sm:text-sm"
+                >
+                  Sign Up
+                </Button>
+              </div>
             </div>
           </nav>
 
