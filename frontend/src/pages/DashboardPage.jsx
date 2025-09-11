@@ -9,20 +9,13 @@ import { useNavigate } from "react-router";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import HighlightedText from "../components/ui/HighlightedText";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
+import LoadingSpinner, {
+  LoadingSpinnerOnly,
+} from "../components/ui/LoadingSpinner";
 import ThemeToggle from "../components/ui/ThemeToggle";
 import { useAuth } from "../contexts/AuthContext";
 import { userAPI } from "../services/api";
 import { Card, CardContent } from "@/components/ui/card";
-
-// Simple Card component matching neubrutalism style
-// const Card = ({ children, className = "" }) => (
-//   <div
-//     className={`bg-secondary-background rounded-lg border-4 border-border shadow-shadow ${className}`}
-//   >
-//     {children}
-//   </div>
-// );
 
 const DashboardPage = () => {
   const { user, logout, userId } = useAuth();
@@ -30,6 +23,7 @@ const DashboardPage = () => {
   const [studySessions, setStudySessions] = useState(0);
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   // Helper function to extract topics from study sessions
   const extractTopicsFromSessions = (sessions) => {
@@ -246,13 +240,23 @@ const DashboardPage = () => {
 
                       <div className="border-t-2 border-neutral-200 mt-2 pt-2">
                         <button
-                          onClick={() => {
-                            logout();
+                          onClick={async () => {
+                            setLogoutLoading(true);
+                            await logout();
+                            setLogoutLoading(false);
                           }}
                           className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-100 transition-colors text-left"
                         >
-                          <LogOut className="text-red-600" size={18} />
-                          <span className="font-bold text-red-600">Logout</span>
+                          {logoutLoading ? (
+                            <LoadingSpinnerOnly message={"Logging out..."} />
+                          ) : (
+                            <>
+                              <LogOut className="text-red-600" size={18} />
+                              <span className="font-bold text-red-600">
+                                Logout
+                              </span>
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
