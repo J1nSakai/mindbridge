@@ -56,17 +56,6 @@ const ProfilePage = () => {
                 {user?.email || "user@example.com"}
               </p>
             </div>
-            <div className="text-left max-w-xs sm:max-w-md mx-auto">
-              <h3 className="text-lg sm:text-xl font-bold text-text mb-3 sm:mb-4">
-                Account Info
-              </h3>
-              <div className="space-y-2">
-                <p className="text-sm sm:text-base">
-                  <span className="font-bold">Joined:</span>{" "}
-                  {date.toLocaleDateString()}
-                </p>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
